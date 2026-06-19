@@ -1,0 +1,6 @@
+# ML 刷题 — 机器学习知识题库
+# 忽略临时文件
+*.tmp
+*.log
+.DS_Store
+Thumbs.db

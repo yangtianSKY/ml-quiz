@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "description": "自定义题库模板 — ML 刷题软件",
+  "instructions": "按照以下格式添加你的题目。每个题目是一个 JSON 对象，放入 questions 数组中。保存后用软件的「导入自定义题库」按钮加载。",
+  "questions": [
+    {
+      "id": "my_c001",
+      "type": "concept",
+      "difficulty": "easy",
+      "topic": "基础概念",
+      "question": "这是一道示例概念题，请问以下哪个是正确的？",
+      "options": [
+        "A. 错误选项一",
+        "B. 正确选项（这是正确答案）",
+        "C. 错误选项三",
+        "D. 错误选项四"
+      ],
+      "correct": 1,
+      "explanation": "这里写答案解析，告诉用户为什么 B 是正确的。"
+    },
+    {
+      "id": "my_p001",
+      "type": "codepuzzle",
+      "difficulty": "medium",
+      "topic": "经典算法",
+      "question": "这是一道示例代码拼图题，请排列代码块完成某项功能。",
+      "context": "可选的上下文说明（如：假设已导入 numpy，变量 X 和 y 已定义）。不需要可删除此字段。",
+      "correct_blocks": [
+        "正确代码块 1（这是第一行）",
+        "正确代码块 2（这是第二行）",
+        "正确代码块 3（这是第三行）"
+      ],
+      "distractor_blocks": [
+        "这是一个迷惑块，看起来对但实际是错的",
+        "这也是一个迷惑块"
+      ],
+      "explanation": "这里写代码的解析，说明正确顺序和每块的作用。"
+    }
+  ]
+}

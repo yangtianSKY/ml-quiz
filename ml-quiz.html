@@ -1,0 +1,4676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML 刷题 - 机器学习知识题库</title>
+<style>
+/* ===== CSS 变量（淡蓝主题） ===== */
+:root {
+  --bg-page: #e3f2fd;
+  --bg-card: #ffffff;
+  --border-card: #bbdefb;
+  --btn-primary: #42a5f5;
+  --btn-primary-hover: #1e88e5;
+  --btn-primary-active: #1565c0;
+  --color-selected: #64b5f6;
+  --color-correct: #4caf50;
+  --color-wrong: #f44336;
+  --text-primary: #212121;
+  --text-secondary: #616161;
+  --text-light: #ffffff;
+  --block-bg: #e3f2fd;
+  --block-border: #90caf9;
+  --block-hover: #bbdefb;
+  --block-selected: #bbdefb;
+  --block-selected-border: #42a5f5;
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-btn: 0 2px 6px rgba(66,165,245,0.3);
+  --radius-card: 16px;
+  --radius-btn: 8px;
+  --radius-block: 8px;
+  --transition: 0.2s ease;
+}
+
+/* ===== 全局重置 ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ===== 屏幕容器 ===== */
+.screen {
+  display: none;
+  max-width: 860px;
+  margin: 24px auto;
+  padding: 0 16px;
+  animation: fadeIn 0.3s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 卡片 ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+}
+
+/* ===== 首页 ===== */
+.home-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.home-header .logo {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+.home-header h1 {
+  font-size: 28px;
+  color: var(--btn-primary-hover);
+  margin-bottom: 4px;
+}
+.home-header .subtitle {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+.filter-section .filter-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* 筛选按钮组 */
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pill {
+  padding: 8px 18px;
+  border: 2px solid var(--border-card);
+  border-radius: 20px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+  user-select: none;
+}
+.pill:hover { border-color: var(--color-selected); background: #f5f9ff; }
+.pill.active {
+  background: var(--btn-primary);
+  color: var(--text-light);
+  border-color: var(--btn-primary);
+}
+
+/* 题目数量选择 */
+.count-select {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.count-select select {
+  padding: 8px 14px;
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius-btn);
+  font-size: 14px;
+  background: var(--bg-card);
+  cursor: pointer;
+  outline: none;
+}
+.count-select select:focus { border-color: var(--btn-primary); }
+
+/* 按钮 */
+.btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius-btn);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: 600;
+  user-select: none;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--btn-primary);
+  color: var(--text-light);
+  box-shadow: var(--shadow-btn);
+  font-size: 18px;
+  padding: 14px 40px;
+}
+.btn-primary:hover { background: var(--btn-primary-hover); }
+.btn-primary:disabled {
+  background: #ccc;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--btn-primary);
+  border: 2px solid var(--btn-primary);
+}
+.btn-secondary:hover { background: #f0f7ff; }
+
+.btn-small {
+  padding: 6px 16px;
+  font-size: 13px;
+}
+
+.btn-next {
+  background: var(--btn-primary);
+  color: var(--text-light);
+  padding: 12px 32px;
+}
+.btn-next:hover { background: var(--btn-primary-hover); }
+
+/* 导入区域 */
+.import-section {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.import-info {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 开始按钮容器 */
+.start-container {
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ===== 答题页 ===== */
+.quiz-topbar {
+  margin-bottom: 20px;
+}
+
+/* 进度条 */
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.score-display {
+  font-weight: 700;
+  color: var(--btn-primary);
+  font-size: 15px;
+}
+.progress-bar-outer {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%;
+  background: var(--btn-primary);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* 题目标头 */
+.question-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  user-select: none;
+}
+.badge-difficulty { background: #e3f2fd; color: #1565c0; }
+.badge-topic { background: #f3e5f5; color: #7b1fa2; }
+.badge-qnum { background: #e8f5e9; color: #2e7d32; }
+
+.question-text {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+.question-context {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: #fafafa;
+  border-radius: var(--radius-btn);
+  border-left: 4px solid var(--btn-primary);
+}
+
+/* ===== 概念题选项 ===== */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.option-card {
+  padding: 14px 18px;
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 15px;
+  user-select: none;
+}
+.option-card:hover { border-color: var(--color-selected); background: #f5f9ff; }
+.option-card.selected { border-color: var(--btn-primary); background: #e3f2fd; }
+.option-card.correct { border-color: var(--color-correct); background: #e8f5e9; color: #2e7d32; }
+.option-card.wrong { border-color: var(--color-wrong); background: #ffebee; color: #c62828; }
+.option-card.disabled { pointer-events: none; opacity: 0.85; }
+
+/* ===== 代码拼图 ===== */
+.puzzle-area { margin-bottom: 20px; }
+
+.block-pool, .block-answer {
+  min-height: 60px;
+  padding: 16px;
+  border-radius: var(--radius-btn);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+  transition: all var(--transition);
+}
+
+.block-pool {
+  background: #fafafa;
+  border: 2px dashed var(--border-card);
+}
+.block-pool:empty::after {
+  content: "所有代码块已选完";
+  color: var(--text-secondary);
+  font-size: 13px;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+}
+
+.block-answer {
+  background: #f8fbff;
+  border: 2px solid var(--btn-primary);
+  min-height: 80px;
+  flex-direction: column;
+}
+.block-answer:empty::after {
+  content: "👆 点击上方代码块，按正确顺序排列";
+  color: var(--text-secondary);
+  font-size: 13px;
+  width: 100%;
+  text-align: center;
+  padding: 16px;
+}
+
+.puzzle-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+.puzzle-label:first-child { margin-top: 0; }
+
+.code-block {
+  display: inline-block;
+  font-family: "Cascadia Code", "Fira Code", "Consolas", "Courier New", monospace;
+  font-size: 13px;
+  background: var(--block-bg);
+  border: 2px solid var(--block-border);
+  border-radius: var(--radius-block);
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-width: 100%;
+}
+.code-block:hover { background: var(--block-hover); border-color: var(--color-selected); transform: translateY(-1px); }
+
+.block-pool .code-block.used {
+  opacity: 0.3;
+  pointer-events: none;
+  text-decoration: line-through;
+}
+
+.block-answer .code-block {
+  display: block;
+  width: 100%;
+  border-color: var(--block-selected-border);
+  background: var(--block-selected);
+  position: relative;
+  padding-left: 36px;
+}
+.block-answer .code-block::before {
+  content: attr(data-order);
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--btn-primary);
+  font-family: sans-serif;
+}
+.block-answer .code-block:hover { background: #e3f2fd; }
+
+.code-block.correct-block { border-color: var(--color-correct); background: #e8f5e9; }
+.code-block.wrong-block { border-color: var(--color-wrong); background: #ffebee; }
+
+/* ===== 反馈区域 ===== */
+.feedback-area {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radius-btn);
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.feedback-area.show { display: block; }
+.feedback-area.correct { background: #e8f5e9; border: 1px solid #a5d6a7; }
+.feedback-area.wrong { background: #fff3e0; border: 1px solid #ffcc02; }
+.feedback-area .feedback-icon { font-size: 24px; margin-right: 8px; }
+.feedback-area .explanation { margin-top: 8px; font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+
+/* ===== 答题按钮区 ===== */
+.quiz-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ===== 结果页 ===== */
+.results-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.results-header .big-icon { font-size: 56px; }
+.results-header .big-score {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--btn-primary);
+}
+.results-header .big-total { font-size: 20px; color: var(--text-secondary); }
+.results-header .grade {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 24px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+.grade-a { background: #4caf50; }
+.grade-b { background: #8bc34a; }
+.grade-c { background: #ff9800; }
+.grade-d { background: #ff5722; }
+.grade-f { background: #f44336; }
+
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 600px) { .breakdown-grid { grid-template-columns: 1fr; } }
+
+.breakdown-card {
+  background: #fafafa;
+  border-radius: var(--radius-btn);
+  padding: 16px;
+}
+.breakdown-card h3 {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-row .b-score { font-weight: 600; }
+
+.review-section { margin-bottom: 24px; }
+.review-section h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.review-item {
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-btn);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.review-item-header {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+  user-select: none;
+  font-size: 14px;
+}
+.review-item-header:hover { background: #f0f0f0; }
+.review-item-header .review-icon {
+  font-size: 12px;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+.review-item.open .review-item-header .review-icon { transform: rotate(180deg); }
+.review-item-body {
+  display: none;
+  padding: 16px;
+  border-top: 1px solid #eee;
+  font-size: 14px;
+}
+.review-item.open .review-item-body { display: block; }
+.review-item-body .rv-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+.review-item-body .rv-label:first-child { margin-top: 0; }
+.review-item-body .rv-correct { color: var(--color-correct); }
+.review-item-body .rv-wrong { color: var(--color-wrong); }
+
+.results-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 500px) {
+  .card { padding: 20px 16px; }
+  .home-header h1 { font-size: 22px; }
+  .big-score { font-size: 36px; }
+  .pill { padding: 6px 14px; font-size: 13px; }
+  .btn-primary { padding: 12px 28px; font-size: 16px; }
+  .code-block { font-size: 12px; padding: 8px 10px; }
+}
+
+/* ===== 提示文字 ===== */
+.hint-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.warn-text {
+  color: #e65100;
+  font-size: 13px;
+  margin-top: 8px;
+  display: none;
+}
+.warn-text.show { display: block; }
+</style>
+
+</head>
+<body>
+
+<!-- ========== 屏幕 1：首页 ========== -->
+<section class="screen active" id="screen-home">
+  <div class="card">
+    <div class="home-header">
+      <div class="logo">🧠</div>
+      <h1>ML 刷题</h1>
+      <p class="subtitle">机器学习基础知识题库 — 概念 + 代码拼图</p>
+    </div>
+
+    <div class="filter-section">
+      <span class="filter-label">📊 难度筛选</span>
+      <div class="pill-group" id="difficulty-pills">
+        <span class="pill active" data-value="all">全部</span>
+        <span class="pill" data-value="easy">🟢 简单</span>
+        <span class="pill" data-value="medium">🟡 中等</span>
+        <span class="pill" data-value="hard">🔴 困难</span>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <span class="filter-label">📚 知识点（可多选，不选=全选）</span>
+      <div class="pill-group" id="topic-pills">
+        <span class="pill active" data-value="基础概念">基础概念</span>
+        <span class="pill active" data-value="经典算法">经典算法</span>
+        <span class="pill active" data-value="神经网络基础">神经网络基础</span>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <span class="filter-label">📝 题目数量</span>
+      <div class="count-select">
+        <select id="question-count">
+          <option value="10">10 题</option>
+          <option value="20" selected>20 题</option>
+          <option value="30">30 题</option>
+          <option value="50">50 题</option>
+          <option value="all">全部题目</option>
+        </select>
+        <span class="import-info" id="available-info">（可用题库：0 道）</span>
+      </div>
+    </div>
+
+    <div class="import-section">
+      <button class="btn btn-secondary btn-small" id="btn-import">📥 导入自定义题库</button>
+      <input type="file" accept=".json" id="import-file" hidden>
+      <span class="import-info" id="import-status"></span>
+    </div>
+
+    <div class="warn-text" id="filter-warn">⚠️ 当前筛选条件下没有匹配的题目，请调整筛选条件。</div>
+
+    <div class="start-container">
+      <button class="btn btn-primary" id="btn-start">🚀 开始刷题</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 屏幕 2：答题页 ========== -->
+<section class="screen" id="screen-quiz">
+  <div class="card">
+    <div class="quiz-topbar">
+      <div class="progress-info">
+        <span id="progress-text">第 1/10 题</span>
+        <span class="score-display" id="score-display">得分：0</span>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progress-bar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="question-meta" id="question-meta"></div>
+    <div class="question-text" id="question-text"></div>
+    <div class="question-context" id="question-context" style="display:none;"></div>
+
+    <!-- 动态填充的题目内容 -->
+    <div id="question-content"></div>
+
+    <!-- 反馈区域 -->
+    <div class="feedback-area" id="feedback-area">
+      <span class="feedback-icon"></span>
+      <span id="feedback-msg"></span>
+      <div class="explanation" id="explanation-text"></div>
+    </div>
+
+    <!-- 操作按钮 -->
+    <div class="quiz-actions">
+      <button class="btn btn-primary" id="btn-submit" disabled>✅ 提交答案</button>
+      <button class="btn btn-secondary" id="btn-skip">⏭ 跳过</button>
+      <button class="btn btn-next" id="btn-next" style="display:none;">下一题 ➡</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 屏幕 3：结果页 ========== -->
+<section class="screen" id="screen-results">
+  <div class="card">
+    <div class="results-header">
+      <div class="big-icon" id="result-icon">🎉</div>
+      <div>
+        <span class="big-score" id="result-score">0</span>
+        <span class="big-total" id="result-total">/10</span>
+      </div>
+      <div style="margin-top:4px;color:var(--text-secondary);" id="result-percent">0%</div>
+      <div class="grade" id="result-grade">-</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="breakdown-card" id="breakdown-difficulty">
+        <h3>📊 按难度</h3>
+      </div>
+      <div class="breakdown-card" id="breakdown-topic">
+        <h3>📚 按知识点</h3>
+      </div>
+    </div>
+
+    <div class="review-section">
+      <h3>🔍 错题回顾</h3>
+      <div id="review-list"></div>
+    </div>
+
+    <div class="results-actions">
+      <button class="btn btn-primary" id="btn-play-again">🔄 再来一次</button>
+      <button class="btn btn-secondary" id="btn-home">🏠 返回首页</button>
+    </div>
+  </div>
+</section>
+
+
+<script>
+(function() {
+  'use strict';
+
+  // ============================================================
+  // 工具函数
+  // ============================================================
+  function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ============================================================
+  // 题库（200道）
+  // ============================================================
+  const DEFAULT_QUESTIONS = [
+  {
+    "id": "c_basic_001",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "下面哪一项最准确地描述了监督学习的特点？",
+    "options": [
+      "A. 模型从未标注数据中发现隐藏模式",
+      "B. 模型从带有标签的训练数据中学习映射关系",
+      "C. 模型通过与环境交互获得奖励信号来学习",
+      "D. 模型仅使用输入特征本身进行聚类"
+    ],
+    "correct": 1,
+    "explanation": "监督学习的核心特点是训练数据包含特征和对应的标签，模型学习从输入到输出的映射关系。"
+  },
+  {
+    "id": "c_basic_002",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "以下哪个任务属于无监督学习？",
+    "options": [
+      "A. 根据房屋面积和楼层预测房价",
+      "B. 判断一封邮件是否为垃圾邮件",
+      "C. 将客户按购买行为自动分为不同群体",
+      "D. 识别图片中的手写数字"
+    ],
+    "correct": 2,
+    "explanation": "客户分群（聚类）是无监督学习的典型应用，数据没有预定义的标签，模型自动发现数据中的结构。"
+  },
+  {
+    "id": "c_basic_003",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "训练集、验证集和测试集各自的作用是什么？",
+    "options": [
+      "A. 训练集调参、验证集训练模型、测试集评估最终性能",
+      "B. 训练集训练模型、验证集调参与选模型、测试集评估最终泛化性能",
+      "C. 训练集测试模型、验证集训练模型、测试集调参",
+      "D. 三者作用完全相同，只是命名不同"
+    ],
+    "correct": 1,
+    "explanation": "训练集用于拟合模型参数，验证集用于调整超参数和选择模型，测试集仅在最终阶段用于评估模型的泛化能力。"
+  },
+  {
+    "id": "c_basic_004",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "什么是过拟合（Overfitting）？",
+    "options": [
+      "A. 模型在训练集上表现差，在测试集上也表现差",
+      "B. 模型在训练集上表现很好，但在测试集上表现很差",
+      "C. 模型在训练集和测试集上都表现很好",
+      "D. 模型训练时间过长导致性能下降"
+    ],
+    "correct": 1,
+    "explanation": "过拟合指模型过度学习了训练数据中的噪声和细节，导致在训练集上表现优异但对未见过的测试数据泛化能力差。"
+  },
+  {
+    "id": "c_basic_005",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "欠拟合（Underfitting）通常表现为什么现象？",
+    "options": [
+      "A. 训练误差和测试误差都很高",
+      "B. 训练误差很低但测试误差很高",
+      "C. 训练误差很高但测试误差很低",
+      "D. 训练误差和测试误差都接近于零"
+    ],
+    "correct": 0,
+    "explanation": "欠拟合意味着模型过于简单，无法捕捉数据中的规律，导致在训练集和测试集上的表现都不好。"
+  },
+  {
+    "id": "c_basic_006",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "偏差（Bias）和方差（Variance）之间的权衡关系是什么？",
+    "options": [
+      "A. 模型越复杂，偏差越大，方差越小",
+      "B. 模型越复杂，偏差越小，方差越大",
+      "C. 偏差和方差总是同向变化",
+      "D. 偏差和方差之间没有任何关系"
+    ],
+    "correct": 1,
+    "explanation": "模型复杂度增加通常降低偏差（更好地拟合训练数据）但增加方差（对训练数据的微小变化更敏感），需要在两者间找到平衡。"
+  },
+  {
+    "id": "c_basic_007",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "K折交叉验证（K-Fold Cross-Validation）的主要目的是什么？",
+    "options": [
+      "A. 加快模型训练速度",
+      "B. 减少模型的参数量",
+      "C. 更稳定地估计模型的泛化性能",
+      "D. 自动选择最优特征"
+    ],
+    "correct": 2,
+    "explanation": "K折交叉验证将数据分为K份，轮流用K-1份训练、1份验证，取平均值作为性能估计，能有效降低单次划分带来的偶然性。"
+  },
+  {
+    "id": "c_basic_008",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "特征标准化（Standardization）的作用是什么？",
+    "options": [
+      "A. 将特征值映射到[0,1]区间",
+      "B. 使特征服从均值为0、标准差为1的分布",
+      "C. 将类别特征转换为数值",
+      "D. 删除方差为零的特征"
+    ],
+    "correct": 1,
+    "explanation": "标准化（Z-score标准化）通过对每个特征减去均值再除以标准差，使其具有零均值和单位方差，有助于梯度下降等算法的收敛。"
+  },
+  {
+    "id": "c_basic_009",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "独热编码（One-Hot Encoding）用于解决什么问题？",
+    "options": [
+      "A. 连续特征的尺度不一致问题",
+      "B. 缺失值的填充问题",
+      "C. 将类别特征转换为模型可处理的数值形式",
+      "D. 减少特征维度过高的问题"
+    ],
+    "correct": 2,
+    "explanation": "独热编码将每个类别值转换为一个二进制向量，避免了直接给类别赋数值带来的虚假顺序关系。"
+  },
+  {
+    "id": "c_basic_010",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "准确率（Accuracy）的定义是什么？",
+    "options": [
+      "A. TP / (TP + FP)",
+      "B. TP / (TP + FN)",
+      "C. (TP + TN) / 总样本数",
+      "D. 2 * Precision * Recall / (Precision + Recall)"
+    ],
+    "correct": 2,
+    "explanation": "准确率是正确分类的样本数（真正例TP + 真负例TN）占总样本数的比例，是最直观的分类评价指标。"
+  },
+  {
+    "id": "c_basic_011",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "精确率（Precision）和召回率（Recall）分别关注什么？",
+    "options": [
+      "A. 精确率关注查全，召回率关注查准",
+      "B. 精确率关注查准，召回率关注查全",
+      "C. 两者都关注查准",
+      "D. 两者都关注查全"
+    ],
+    "correct": 1,
+    "explanation": "精确率关注预测为正的样本中有多少是真正的正例（查准率），召回率关注所有真正的正例中有多少被找出来了（查全率）。"
+  },
+  {
+    "id": "c_basic_012",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "F1分数是如何计算的？",
+    "options": [
+      "A. 精确率和召回率的算术平均值",
+      "B. 精确率和召回率的调和平均值",
+      "C. 精确率和召回率的最大值",
+      "D. 精确率和召回率的乘积"
+    ],
+    "correct": 1,
+    "explanation": "F1分数是精确率和召回率的调和平均值：F1 = 2 * Precision * Recall / (Precision + Recall)，在两者不平衡时比算术平均更敏感。"
+  },
+  {
+    "id": "c_basic_013",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "AUC-ROC指标中，AUC代表什么？",
+    "options": [
+      "A. 曲线下方的面积，值越接近0越好",
+      "B. 曲线下方的面积，值越接近1越好",
+      "C. 曲线上的最高点，值越接近1越好",
+      "D. 曲线上的最低点，值越接近0越好"
+    ],
+    "correct": 1,
+    "explanation": "AUC（Area Under the Curve）是ROC曲线下的面积，值范围在0到1之间，越接近1表示分类器性能越好，0.5表示随机猜测。"
+  },
+  {
+    "id": "c_basic_014",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "L1正则化和L2正则化的主要区别是什么？",
+    "options": [
+      "A. L1倾向于产生稀疏解，L2倾向于使权重均匀缩小",
+      "B. L1倾向于使权重均匀缩小，L2倾向于产生稀疏解",
+      "C. 两者效果完全相同",
+      "D. L1用于回归，L2用于分类"
+    ],
+    "correct": 0,
+    "explanation": "L1正则化（Lasso）在损失函数中加入权重绝对值之和，倾向于将不重要的特征权重压缩为零，产生稀疏模型；L2正则化（Ridge）加入权重平方和，使所有权重都趋向于较小的值。"
+  },
+  {
+    "id": "c_basic_015",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "Early Stopping的核心思想是什么？",
+    "options": [
+      "A. 在训练误差降到零时停止训练",
+      "B. 在验证集误差开始上升时停止训练以防止过拟合",
+      "C. 在训练时间达到预设上限时停止",
+      "D. 在模型参数数量超过阈值时停止"
+    ],
+    "correct": 1,
+    "explanation": "Early Stopping在训练过程中监控验证集表现，当验证误差不再下降甚至开始上升时提前终止训练，从而避免过拟合。"
+  },
+  {
+    "id": "c_basic_016",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "Dropout在神经网络中的作用是什么？",
+    "options": [
+      "A. 增加模型参数量以提升表达能力",
+      "B. 训练时随机丢弃一部分神经元，作为一种正则化手段防止过拟合",
+      "C. 加速梯度下降的收敛速度",
+      "D. 自动选择最优的学习率"
+    ],
+    "correct": 1,
+    "explanation": "Dropout在每次训练迭代中随机使部分神经元失活，迫使网络学习更鲁棒的特征表示，相当于集成了多个子网络，有效防止过拟合。"
+  },
+  {
+    "id": "c_basic_017",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "关于偏差-方差分解，以下哪个说法是正确的？",
+    "options": [
+      "A. 高偏差模型通常过于复杂，高方差模型通常过于简单",
+      "B. 高偏差意味着欠拟合，高方差意味着过拟合",
+      "C. 增加训练数据量总能同时降低偏差和方差",
+      "D. 偏差和方差与模型复杂度无关"
+    ],
+    "correct": 1,
+    "explanation": "高偏差通常对应欠拟合（模型太简单），高方差通常对应过拟合（模型太复杂）。增加数据量主要降低方差，对偏差的改善有限。"
+  },
+  {
+    "id": "c_basic_018",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "在数据划分中，分层抽样（Stratified Sampling）为什么重要？",
+    "options": [
+      "A. 可以加快模型训练速度",
+      "B. 可以确保各类别在训练集和测试集中的比例与原始数据一致",
+      "C. 可以减少特征维度",
+      "D. 可以自动填充缺失值"
+    ],
+    "correct": 1,
+    "explanation": "分层抽样保证每个类别在训练集和测试集中的分布比例与原始数据集相同，对于类别不平衡的数据集尤为重要，可避免某类样本全部进入测试集。"
+  },
+  {
+    "id": "c_basic_019",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "特征归一化（Normalization/Min-Max Scaling）将数据映射到哪个区间？",
+    "options": [
+      "A. 均值为0、标准差为1",
+      "B. [0, 1]区间",
+      "C. [-1, 1]区间",
+      "D. 任意区间，取决于参数设置"
+    ],
+    "correct": 1,
+    "explanation": "Min-Max归一化通过(x - min) / (max - min)将特征线性映射到[0, 1]区间。也可以根据需要映射到其他区间。"
+  },
+  {
+    "id": "c_basic_020",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "在类别严重不平衡时，为什么准确率不是一个好的评价指标？",
+    "options": [
+      "A. 准确率计算太复杂",
+      "B. 即使模型将所有样本预测为多数类，准确率也可能很高",
+      "C. 准确率不能用于二分类问题",
+      "D. 准确率总是低于精确率"
+    ],
+    "correct": 1,
+    "explanation": "在类别不平衡问题中（如正例仅占1%），一个将所有样本都预测为负例的模型准确率可达99%，但它完全没有识别正例的能力，因此需要用精确率、召回率、F1等指标。"
+  },
+  {
+    "id": "c_basic_021",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "Grid Search（网格搜索）的主要缺点是什么？",
+    "options": [
+      "A. 无法找到最优超参数组合",
+      "B. 当超参数数量和候选值较多时计算代价呈指数增长",
+      "C. 只能用于线性模型",
+      "D. 需要手动指定损失函数"
+    ],
+    "correct": 1,
+    "explanation": "网格搜索遍历所有超参数组合，当超参数空间较大时计算量呈指数级增长（维度灾难），此时随机搜索（Random Search）往往更高效。"
+  },
+  {
+    "id": "c_basic_022",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "PCA（主成分分析）降维的核心思想是什么？",
+    "options": [
+      "A. 随机选择一部分特征保留",
+      "B. 找到数据方差最大的方向进行投影",
+      "C. 使用非线性变换将数据映射到低维空间",
+      "D. 删除与目标变量相关性低的特征"
+    ],
+    "correct": 1,
+    "explanation": "PCA通过正交变换找到数据方差最大的方向（主成分），将数据投影到这些方向上，在保留尽可能多方差的前提下实现降维。"
+  },
+  {
+    "id": "c_basic_023",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "在应用PCA之前通常需要对数据做什么预处理？",
+    "options": [
+      "A. 独热编码",
+      "B. 标签编码",
+      "C. 标准化（使各特征均值为0、方差为1）",
+      "D. 多项式特征扩展"
+    ],
+    "correct": 2,
+    "explanation": "PCA对特征的尺度敏感，如果不同特征量纲不同，方差大的特征会主导主成分方向。因此通常需要先进行标准化处理。"
+  },
+  {
+    "id": "c_basic_024",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "处理缺失值时，使用均值填充的潜在缺点是什么？",
+    "options": [
+      "A. 会增加数据集的样本量",
+      "B. 会改变特征的分布，减小方差并可能扭曲与其他特征的关系",
+      "C. 只能用于分类特征",
+      "D. 会删除过多有用的数据"
+    ],
+    "correct": 1,
+    "explanation": "均值填充会改变原始数据分布，减小特征的方差，并可能破坏特征间的相关性结构。更好的方法包括KNN填充、多重插补等。"
+  },
+  {
+    "id": "c_basic_025",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "半监督学习（Semi-Supervised Learning）适用于什么场景？",
+    "options": [
+      "A. 所有数据都有完整标签",
+      "B. 只有少量数据有标签，大量数据无标签",
+      "C. 完全没有任何标签数据",
+      "D. 数据标签是实时生成的"
+    ],
+    "correct": 1,
+    "explanation": "半监督学习利用少量有标签数据和大量无标签数据来训练模型，在标注成本高但未标注数据容易获取的场景中特别有价值。"
+  },
+  {
+    "id": "c_basic_026",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "强化学习与其他学习范式最根本的区别是什么？",
+    "options": [
+      "A. 强化学习不需要任何数据",
+      "B. 强化学习通过与环境交互获得的奖励/惩罚信号来学习最优策略",
+      "C. 强化学习只能用于游戏场景",
+      "D. 强化学习不需要定义目标函数"
+    ],
+    "correct": 1,
+    "explanation": "强化学习中，智能体通过与环境交互，基于动作获得的奖励或惩罚来学习策略。它不像监督学习那样依赖标注好的正确/错误答案。"
+  },
+  {
+    "id": "c_basic_027",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "特征选择中的过滤法（Filter Method）有什么特点？",
+    "options": [
+      "A. 使用模型性能作为特征子集的评价标准",
+      "B. 使用统计指标（如相关系数、卡方检验）独立于模型评估每个特征",
+      "C. 在模型训练过程中自动完成特征选择",
+      "D. 需要反复训练模型来评估特征重要性"
+    ],
+    "correct": 1,
+    "explanation": "过滤法在模型训练之前，基于统计指标（方差、相关系数、互信息、卡方等）独立评估每个特征与目标变量的相关性，计算效率高但不考虑特征间的交互。"
+  },
+  {
+    "id": "c_basic_028",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "在训练深度学习模型时，如果训练损失持续下降但验证损失开始上升，这说明了什么？",
+    "options": [
+      "A. 模型正在欠拟合，需要增加复杂度",
+      "B. 模型开始过拟合，应考虑使用正则化或Early Stopping",
+      "C. 学习率设置过高",
+      "D. 这是正常现象，无需处理"
+    ],
+    "correct": 1,
+    "explanation": "训练损失下降而验证损失上升是过拟合的典型信号。此时应使用Early Stopping、Dropout、数据增强或正则化等手段来缓解。"
+  },
+  {
+    "id": "c_basic_029",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "在K折交叉验证中，K值的选择对结果有什么影响？",
+    "options": [
+      "A. K越大偏差越大但方差越小",
+      "B. K越小偏差越小但方差越大",
+      "C. K越大偏差越小但方差越大，K越小偏差越大但方差越小",
+      "D. K值不影响偏差和方差"
+    ],
+    "correct": 2,
+    "explanation": "K值增大时，每次训练使用的数据更多（接近总数据量），模型偏差减小；但各折训练集高度重叠，导致估计结果的方差增大。极端情况K=N时为留一法。"
+  },
+  {
+    "id": "c_basic_030",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "以下关于L1和L2正则化的说法哪个是错误的？",
+    "options": [
+      "A. L1正则化可以用于特征选择",
+      "B. L2正则化解析解存在且唯一",
+      "C. L1正则化在任何情况下都比L2正则化效果好",
+      "D. Elastic Net结合了L1和L2的优点"
+    ],
+    "correct": 2,
+    "explanation": "L1和L2各有适用场景，不存在绝对的好坏。L1适合特征稀疏的场景（希望自动特征选择），L2在处理多重共线性和防止过拟合方面表现稳定。Elastic Net结合两者优势。"
+  },
+  {
+    "id": "c_basic_031",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "PCA中‘方差解释率’（Explained Variance Ratio）表示什么？",
+    "options": [
+      "A. 每个主成分所包含的样本数量占比",
+      "B. 每个主成分所捕获的原始数据方差占总体方差的比例",
+      "C. 每个主成分与目标变量的相关系数",
+      "D. 降维后数据的重构误差"
+    ],
+    "correct": 1,
+    "explanation": "方差解释率是每个主成分的特征值占所有特征值之和的比例，反映了该主成分保留了原始数据多少信息量，是选择保留主成分数量的重要依据。"
+  },
+  {
+    "id": "c_basic_032",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "为什么在处理缺失值时，直接删除含有缺失值的样本（Listwise Deletion）可能有问题？",
+    "options": [
+      "A. 它会自动增加样本方差",
+      "B. 它可能导致样本量大幅减少，且如果缺失不是完全随机的会引入偏差",
+      "C. 它只能用于回归问题",
+      "D. 它会改变特征的数据类型"
+    ],
+    "correct": 1,
+    "explanation": "直接删除缺失样本在缺失率较高时会损失大量数据；更重要的是，如果数据不是完全随机缺失（MCAR）的，删除操作会引入系统性偏差，影响模型泛化能力。"
+  },
+  {
+    "id": "c_basic_033",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "在评估分类模型时，ROC曲线和PR曲线应该如何选择？",
+    "options": [
+      "A. 任何情况下ROC曲线都优于PR曲线",
+      "B. 在类别严重不平衡时PR曲线比ROC曲线更能反映模型实际性能",
+      "C. PR曲线只适用于多分类问题",
+      "D. ROC曲线无法用于二分类问题"
+    ],
+    "correct": 1,
+    "explanation": "当正负样本严重不平衡时，ROC曲线可能过于乐观（因为TN多导致假正率变化小），而PR曲线直接关注正类的预测质量，对此更为敏感。"
+  },
+  {
+    "id": "c_basic_034",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "关于偏差-方差权衡，增加模型复杂度（如增加多项式特征次数）通常会导致什么？",
+    "options": [
+      "A. 训练误差增加，测试误差减少",
+      "B. 偏差减少，方差增加",
+      "C. 偏差和方差同时减少",
+      "D. 偏差增加，方差减少"
+    ],
+    "correct": 1,
+    "explanation": "增加模型复杂度使模型能更灵活地拟合训练数据（偏差减小），但也使模型对训练数据的微小变化更敏感（方差增加），当复杂度过高时测试误差反而上升。"
+  },
+  {
+    "id": "c_basic_035",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "在强化学习中，探索（Exploration）与利用（Exploitation）的权衡是指什么？",
+    "options": [
+      "A. 在训练多个模型和单个模型之间的选择",
+      "B. 在尝试新动作获取更多信息与选择已知最优动作获取最大奖励之间的平衡",
+      "C. 在CPU和GPU之间的计算资源分配",
+      "D. 在增加数据量和增加模型复杂度之间的权衡"
+    ],
+    "correct": 1,
+    "explanation": "探索意味着尝试未知的动作以发现更好的策略，利用意味着基于当前已知信息选择最优动作。过度探索会降低短期奖励，过度利用可能陷入局部最优。"
+  },
+  {
+    "id": "c_basic_036",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "为什么交叉验证的估计结果可能存在偏差？",
+    "options": [
+      "A. 交叉验证总是高估真实性能",
+      "B. 当数据存在分组结构或时间依赖性时，随机划分会破坏数据的内在结构导致有偏估计",
+      "C. 交叉验证只能使用准确率作为指标",
+      "D. 交叉验证计算量太小导致结果不可靠"
+    ],
+    "correct": 1,
+    "explanation": "如果数据存在分组（如同一用户的多条记录）或时间依赖（如股票价格），随机K折划分会导致训练集和测试集之间存在信息泄露，使估计结果偏乐观。"
+  },
+  {
+    "id": "c_basic_037",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "dropout在训练和推理（测试）阶段的行为有何不同？",
+    "options": [
+      "A. 训练时关闭dropout，推理时开启dropout",
+      "B. 训练时开启dropout随机丢弃神经元，推理时关闭dropout但需要对权重进行缩放",
+      "C. 训练和推理阶段dropout行为完全相同",
+      "D. 推理时使用更高的dropout比率"
+    ],
+    "correct": 1,
+    "explanation": "训练时dropout以概率p随机丢弃神经元；推理时所有神经元都参与计算，但权重需要乘以(1-p)进行缩放（或训练时对保留的神经元输出除以(1-p)做Inverted Dropout），以保证输出期望一致。"
+  },
+  {
+    "id": "c_basic_038",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "Early Stopping与L2正则化之间有什么关系？",
+    "options": [
+      "A. 两者没有数学上的联系",
+      "B. 在线性模型和使用小学习率的梯度下降中，Early Stopping的效果近似等价于L2正则化",
+      "C. Early Stopping总是优于L2正则化",
+      "D. L2正则化总是优于Early Stopping"
+    ],
+    "correct": 1,
+    "explanation": "对于线性模型，使用小学习率的梯度下降进行Early Stopping在数学上近似等价于L2正则化。Early Stopping通过限制优化迭代次数隐式地约束了参数空间。"
+  },
+  {
+    "id": "c_basic_039",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "Grid Search与Random Search相比，在超参数优化中各有什么优劣？",
+    "options": [
+      "A. Grid Search总是比Random Search更好",
+      "B. 当只有少数超参数真正重要时，Random Search在相同计算预算下更可能找到更优解",
+      "C. Random Search不能处理连续型超参数",
+      "D. Grid Search的计算复杂度不随超参数数量变化"
+    ],
+    "correct": 1,
+    "explanation": "研究表明，当只有少数超参数对性能影响较大时，Random Search在相同迭代次数内探索了更多不同的重要超参数值，比Grid Search更高效。Grid Search则在超参数空间较小时能提供系统性的覆盖。"
+  },
+  {
+    "id": "c_basic_040",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "特征选择中，包装法（Wrapper Method）、过滤法（Filter Method）和嵌入法（Embedded Method）的核心区别是什么？",
+    "options": [
+      "A. 三种方法效果完全相同",
+      "B. 过滤法独立于模型评估特征，包装法使用模型性能评估特征子集，嵌入法在模型训练中自动选择特征",
+      "C. 包装法不依赖任何模型",
+      "D. 嵌入法需要手动指定每个特征的重要性"
+    ],
+    "correct": 1,
+    "explanation": "过滤法使用统计指标独立评估特征（如相关系数），与模型无关；包装法将特征选择视为搜索问题，用模型性能评估每个子集（如递归特征消除）；嵌入法在模型训练过程中自动完成特征选择（如Lasso的L1正则化、树模型的特征重要性）。"
+  },
+  {
+    "id": "p_basic_001",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用train_test_split将数据集X, y按8:2划分为训练集和测试集，并设置随机种子为42。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.model_selection import train_test_split",
+      "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)"
+    ],
+    "distractor_blocks": [
+      "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, random_state=42)",
+      "from sklearn.preprocessing import train_test_split"
+    ],
+    "explanation": "test_size=0.2表示20%数据作为测试集，random_state=42确保每次划分结果一致。train_test_split来自sklearn.model_selection模块。"
+  },
+  {
+    "id": "p_basic_002",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用StandardScaler对训练集X_train进行拟合并转换，然后对测试集X_test仅进行转换。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.preprocessing import StandardScaler",
+      "scaler = StandardScaler()",
+      "X_train_scaled = scaler.fit_transform(X_train)",
+      "X_test_scaled = scaler.transform(X_test)"
+    ],
+    "distractor_blocks": [
+      "X_test_scaled = scaler.fit_transform(X_test)",
+      "from sklearn.model_selection import StandardScaler"
+    ],
+    "explanation": "对训练集使用fit_transform计算均值和标准差并转换，对测试集只用transform使用训练集上计算的参数，避免数据泄露。"
+  },
+  {
+    "id": "p_basic_003",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用pandas读取CSV文件data.csv，然后使用dropna()删除所有包含缺失值的行。",
+    "context": "",
+    "correct_blocks": [
+      "import pandas as pd",
+      "df = pd.read_csv('data.csv')",
+      "df_clean = df.dropna()"
+    ],
+    "distractor_blocks": [
+      "df_clean = df.fillna(0)",
+      "import numpy as pd"
+    ],
+    "explanation": "pd.read_csv读取CSV文件，dropna()默认删除任何包含NaN的行。fillna(0)是用0填充而非删除。"
+  },
+  {
+    "id": "p_basic_004",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用numpy创建一个形状为(3,4)的全零数组和一个值为1到12的数组并重塑为(3,4)。",
+    "context": "",
+    "correct_blocks": [
+      "import numpy as np",
+      "zeros_arr = np.zeros((3, 4))",
+      "arr = np.arange(1, 13).reshape(3, 4)"
+    ],
+    "distractor_blocks": [
+      "arr = np.arange(1, 12).reshape(3, 4)",
+      "zeros_arr = np.zeros(3, 4)"
+    ],
+    "explanation": "np.arange(1,13)生成1到12的序列（不包括13），reshape(3,4)重塑为3行4列。np.zeros需要传入元组参数。"
+  },
+  {
+    "id": "p_basic_005",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用matplotlib绘制一个折线图，x轴为[1,2,3,4]，y轴为[1,4,9,16]，添加标题和坐标轴标签。",
+    "context": "",
+    "correct_blocks": [
+      "import matplotlib.pyplot as plt",
+      "plt.plot([1,2,3,4], [1,4,9,16])",
+      "plt.title('Square Numbers')",
+      "plt.xlabel('x')",
+      "plt.ylabel('y')",
+      "plt.show()"
+    ],
+    "distractor_blocks": [
+      "plt.scatter([1,2,3,4], [1,4,9,16])",
+      "plt.bar([1,2,3,4], [1,4,9,16])"
+    ],
+    "explanation": "plt.plot绘制折线图，plt.title/xlabel/ylabel设置图表和坐标轴标题，plt.show显示图表。scatter绘制散点图，bar绘制柱状图。"
+  },
+  {
+    "id": "p_basic_006",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用seaborn绘制特征df['feature']的分布直方图（含KDE曲线）。",
+    "context": "",
+    "correct_blocks": [
+      "import seaborn as sns",
+      "sns.histplot(df['feature'], kde=True)"
+    ],
+    "distractor_blocks": [
+      "sns.scatterplot(df['feature'])",
+      "sns.histplot(df['feature'], kde=False)"
+    ],
+    "explanation": "sns.histplot绘制直方图，kde=True同时绘制核密度估计曲线。scatterplot用于绘制散点图。"
+  },
+  {
+    "id": "p_basic_007",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用sklearn计算分类的准确率accuracy_score。",
+    "context": "已知y_true为真实标签，y_pred为预测标签。",
+    "correct_blocks": [
+      "from sklearn.metrics import accuracy_score",
+      "acc = accuracy_score(y_true, y_pred)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.metrics import precision_score",
+      "acc = accuracy_score(y_pred, y_true)"
+    ],
+    "explanation": "accuracy_score位于sklearn.metrics模块，参数顺序是先真实标签后预测标签。"
+  },
+  {
+    "id": "p_basic_008",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用sklearn的LogisticRegression训练一个逻辑回归模型并预测。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.linear_model import LogisticRegression",
+      "model = LogisticRegression()",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.svm import LogisticRegression",
+      "y_pred = model.fit(X_test)"
+    ],
+    "explanation": "LogisticRegression来自sklearn.linear_model。先用fit训练，再用predict预测。fit返回模型本身而非预测结果。"
+  },
+  {
+    "id": "p_basic_009",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用train_test_split按8:2划分数据，并使用分层抽样保持类别比例。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.model_selection import train_test_split",
+      "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)"
+    ],
+    "distractor_blocks": [
+      "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=X, random_state=42)",
+      "from sklearn.preprocessing import train_test_split"
+    ],
+    "explanation": "stratify=y确保训练集和测试集中y的类别比例与原始数据一致，实现分层抽样。stratify应传入标签而非特征。"
+  },
+  {
+    "id": "p_basic_010",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用pandas查看数据集df的基本信息，包括数据类型和非空值数量。",
+    "context": "",
+    "correct_blocks": [
+      "import pandas as pd",
+      "df.info()"
+    ],
+    "distractor_blocks": [
+      "df.describe()",
+      "df.head()"
+    ],
+    "explanation": "df.info()显示列名、非空值数量、数据类型等概要信息。df.describe()显示数值列的统计摘要，df.head()显示前5行。"
+  },
+  {
+    "id": "p_basic_011",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "基础概念",
+    "question": "补全代码：使用sklearn计算精确率、召回率和F1分数。",
+    "context": "已知y_true为真实标签，y_pred为预测标签。",
+    "correct_blocks": [
+      "from sklearn.metrics import precision_score, recall_score, f1_score",
+      "precision = precision_score(y_true, y_pred)",
+      "recall = recall_score(y_true, y_pred)",
+      "f1 = f1_score(y_true, y_pred)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.linear_model import precision_score",
+      "precision = precision_score(y_pred, y_true)"
+    ],
+    "explanation": "这三个指标都在sklearn.metrics模块中，参数顺序为(y_true, y_pred)。"
+  },
+  {
+    "id": "p_basic_012",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用Lasso回归（L1正则化）训练模型，alpha设为0.1。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.linear_model import Lasso",
+      "model = Lasso(alpha=0.1)",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.linear_model import Ridge",
+      "model = Lasso(alpha=0.1, penalty='l1')"
+    ],
+    "explanation": "Lasso使用L1正则化，alpha参数控制正则化强度。Ridge使用L2正则化。Lasso不需要指定penalty参数，它默认就是L1。"
+  },
+  {
+    "id": "p_basic_013",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用Ridge回归（L2正则化）训练模型，alpha设为1.0。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.linear_model import Ridge",
+      "model = Ridge(alpha=1.0)",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.linear_model import Lasso",
+      "model = Ridge(penalty='l2')"
+    ],
+    "explanation": "Ridge使用L2正则化，alpha控制正则化强度。Ridge是sklearn.linear_model中的类，不需要指定penalty参数。"
+  },
+  {
+    "id": "p_basic_014",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用K折交叉验证（K=5）评估逻辑回归模型的性能。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.model_selection import cross_val_score",
+      "from sklearn.linear_model import LogisticRegression",
+      "model = LogisticRegression()",
+      "scores = cross_val_score(model, X, y, cv=5)",
+      "print(scores.mean())"
+    ],
+    "distractor_blocks": [
+      "scores = cross_val_score(model, X_train, y_train, cv=5)",
+      "from sklearn.metrics import cross_val_score"
+    ],
+    "explanation": "cross_val_score位于sklearn.model_selection模块，直接传入完整数据集X和y以及cv折数，无需手动划分训练/测试集。"
+  },
+  {
+    "id": "p_basic_015",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用OneHotEncoder对类别特征列进行独热编码。",
+    "context": "假设df是一个pandas DataFrame，categorical_col是类别特征列名。",
+    "correct_blocks": [
+      "from sklearn.preprocessing import OneHotEncoder",
+      "encoder = OneHotEncoder(sparse_output=False)",
+      "encoded = encoder.fit_transform(df[['categorical_col']])"
+    ],
+    "distractor_blocks": [
+      "encoder = OneHotEncoder(sparse=True)",
+      "encoded = encoder.fit(df[['categorical_col']])"
+    ],
+    "explanation": "sparse_output=False（新版sklearn参数名，旧版为sparse）返回numpy数组而非稀疏矩阵。fit只是拟合不返回转换结果，需用fit_transform。"
+  },
+  {
+    "id": "p_basic_016",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用PCA将数据降到2维，并打印每个主成分的方差解释率。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.decomposition import PCA",
+      "pca = PCA(n_components=2)",
+      "X_pca = pca.fit_transform(X_scaled)",
+      "print(pca.explained_variance_ratio_)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.preprocessing import PCA",
+      "print(pca.explained_variance_)"
+    ],
+    "explanation": "PCA来自sklearn.decomposition。explained_variance_ratio_返回每个主成分的方差解释比例；explained_variance_返回原始方差值而非比例。"
+  },
+  {
+    "id": "p_basic_017",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用SimpleImputer用中位数填充数值列的缺失值。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.impute import SimpleImputer",
+      "imputer = SimpleImputer(strategy='median')",
+      "X_imputed = imputer.fit_transform(X)"
+    ],
+    "distractor_blocks": [
+      "imputer = SimpleImputer(strategy='mean')",
+      "from sklearn.preprocessing import SimpleImputer"
+    ],
+    "explanation": "SimpleImputer来自sklearn.impute模块。strategy='median'使用中位数填充，'mean'使用均值填充。"
+  },
+  {
+    "id": "p_basic_018",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用GridSearchCV搜索逻辑回归的最优参数C（正则化强度的倒数）和solver。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.model_selection import GridSearchCV",
+      "from sklearn.linear_model import LogisticRegression",
+      "param_grid = {'C': [0.01, 0.1, 1, 10], 'solver': ['liblinear', 'lbfgs']}",
+      "grid = GridSearchCV(LogisticRegression(), param_grid, cv=5)",
+      "grid.fit(X_train, y_train)",
+      "print(grid.best_params_)"
+    ],
+    "distractor_blocks": [
+      "param_grid = {'C': [0.01, 0.1, 1, 10], 'penalty': ['l1', 'l2']}",
+      "from sklearn.metrics import GridSearchCV"
+    ],
+    "explanation": "GridSearchCV来自sklearn.model_selection。param_grid定义搜索的参数网格，cv=5指定5折交叉验证。best_params_返回最优参数组合。"
+  },
+  {
+    "id": "p_basic_019",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "基础概念",
+    "question": "补全代码：使用MinMaxScaler将数据缩放到[0,1]区间，并在训练集和测试集上正确应用。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.preprocessing import MinMaxScaler",
+      "scaler = MinMaxScaler()",
+      "X_train_scaled = scaler.fit_transform(X_train)",
+      "X_test_scaled = scaler.transform(X_test)"
+    ],
+    "distractor_blocks": [
+      "X_test_scaled = scaler.fit_transform(X_test)",
+      "from sklearn.decomposition import MinMaxScaler"
+    ],
+    "explanation": "对测试集只能使用transform，不能使用fit_transform，否则会导致数据泄露（使用测试集的信息来缩放训练数据）。"
+  },
+  {
+    "id": "p_basic_020",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：使用seaborn绘制混淆矩阵的热力图。",
+    "context": "已知y_true为真实标签，y_pred为预测标签。",
+    "correct_blocks": [
+      "from sklearn.metrics import confusion_matrix",
+      "import seaborn as sns",
+      "cm = confusion_matrix(y_true, y_pred)",
+      "sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')"
+    ],
+    "distractor_blocks": [
+      "sns.heatmap(cm, annot=False)",
+      "from sklearn.linear_model import confusion_matrix"
+    ],
+    "explanation": "confusion_matrix来自sklearn.metrics。annot=True在热力图格子中显示数值，fmt='d'格式化为整数，cmap指定颜色方案。"
+  },
+  {
+    "id": "p_basic_021",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：绘制ROC曲线并计算AUC值。",
+    "context": "假设model是已训练的二分类模型，X_test和y_test是测试数据。",
+    "correct_blocks": [
+      "from sklearn.metrics import roc_curve, auc",
+      "y_scores = model.predict_proba(X_test)[:, 1]",
+      "fpr, tpr, _ = roc_curve(y_test, y_scores)",
+      "roc_auc = auc(fpr, tpr)",
+      "import matplotlib.pyplot as plt",
+      "plt.plot(fpr, tpr, label=f'ROC (AUC = {roc_auc:.2f})')",
+      "plt.plot([0, 1], [0, 1], 'k--')",
+      "plt.xlabel('False Positive Rate')",
+      "plt.ylabel('True Positive Rate')",
+      "plt.legend()"
+    ],
+    "distractor_blocks": [
+      "y_scores = model.predict(X_test)",
+      "fpr, tpr, _ = roc_curve(y_test, y_pred)"
+    ],
+    "explanation": "ROC曲线需要预测概率而非硬分类结果，因此使用predict_proba获取正类概率。对角线虚线表示随机分类器。auc函数计算曲线下面积。"
+  },
+  {
+    "id": "p_basic_022",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：使用Pipeline将StandardScaler和LogisticRegression组合成一个流程，并用交叉验证评估。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.pipeline import Pipeline",
+      "from sklearn.preprocessing import StandardScaler",
+      "from sklearn.linear_model import LogisticRegression",
+      "from sklearn.model_selection import cross_val_score",
+      "pipe = Pipeline([('scaler', StandardScaler()), ('clf', LogisticRegression())])",
+      "scores = cross_val_score(pipe, X, y, cv=5)"
+    ],
+    "distractor_blocks": [
+      "pipe = Pipeline([StandardScaler(), LogisticRegression()])",
+      "scores = cross_val_score(pipe, X_train, y_train, cv=5)"
+    ],
+    "explanation": "Pipeline需要一个由(name, estimator)元组组成的列表。使用Pipeline确保交叉验证中每一步都在训练集上拟合并正确应用到验证集，避免数据泄露。"
+  },
+  {
+    "id": "p_basic_023",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：使用SelectKBest和f_classif选择与目标变量最相关的5个特征。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.feature_selection import SelectKBest, f_classif",
+      "selector = SelectKBest(score_func=f_classif, k=5)",
+      "X_selected = selector.fit_transform(X, y)",
+      "selected_indices = selector.get_support(indices=True)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.feature_selection import SelectKBest, mutual_info_classif",
+      "selector = SelectKBest(k=5, method='f_classif')"
+    ],
+    "explanation": "SelectKBest配合f_classif使用ANOVA F值评估特征与目标的相关性。k=5保留5个最佳特征。get_support返回被选中特征的布尔掩码或索引。"
+  },
+  {
+    "id": "p_basic_024",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：使用RFE（递归特征消除）选择最重要的3个特征，基于逻辑回归模型。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.feature_selection import RFE",
+      "from sklearn.linear_model import LogisticRegression",
+      "model = LogisticRegression()",
+      "rfe = RFE(model, n_features_to_select=3)",
+      "X_rfe = rfe.fit_transform(X, y)",
+      "print(rfe.support_)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.decomposition import RFE",
+      "rfe = RFE(model, n_components=3)"
+    ],
+    "explanation": "RFE来自sklearn.feature_selection。n_features_to_select指定要保留的特征数，support_返回每个特征是否被选中的布尔数组。"
+  },
+  {
+    "id": "p_basic_025",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：使用pandas对数据集进行描述性统计，并按目标变量分组计算均值。",
+    "context": "假设df中有数值列feature和类别列target。",
+    "correct_blocks": [
+      "import pandas as pd",
+      "df.describe()",
+      "df.groupby('target')['feature'].mean()"
+    ],
+    "distractor_blocks": [
+      "df.groupby('feature')['target'].mean()",
+      "df.groupby('target').describe()"
+    ],
+    "explanation": "describe()输出数值列的count/mean/std/min/percentiles/max。groupby('target')['feature'].mean()按target分组计算feature的均值。"
+  },
+  {
+    "id": "p_basic_026",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：使用matplotlib在一个画布上绘制两个子图，左边是散点图，右边是折线图。",
+    "context": "假设x, y1, y2是三个长度相同的数组。",
+    "correct_blocks": [
+      "import matplotlib.pyplot as plt",
+      "fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))",
+      "ax1.scatter(x, y1)",
+      "ax1.set_title('Scatter Plot')",
+      "ax2.plot(x, y2)",
+      "ax2.set_title('Line Plot')",
+      "plt.tight_layout()",
+      "plt.show()"
+    ],
+    "distractor_blocks": [
+      "fig, ax1, ax2 = plt.subplots(1, 2)",
+      "ax1.plot(x, y1)",
+      "ax2.scatter(x, y2)"
+    ],
+    "explanation": "plt.subplots(1,2)创建1行2列的子图布局。figsize控制画布大小。tight_layout自动调整子图间距。scatter绘制散点，plot绘制折线。"
+  },
+  {
+    "id": "p_basic_027",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "基础概念",
+    "question": "补全代码：使用多项式特征扩展和Ridge回归构建多项式回归Pipeline，degree=2，用交叉验证评估MSE。",
+    "context": "",
+    "correct_blocks": [
+      "from sklearn.pipeline import Pipeline",
+      "from sklearn.preprocessing import PolynomialFeatures, StandardScaler",
+      "from sklearn.linear_model import Ridge",
+      "from sklearn.model_selection import cross_val_score",
+      "pipe = Pipeline([('poly', PolynomialFeatures(degree=2)), ('scaler', StandardScaler()), ('ridge', Ridge(alpha=1.0))])",
+      "scores = -cross_val_score(pipe, X, y, cv=5, scoring='neg_mean_squared_error')",
+      "print(scores.mean())"
+    ],
+    "distractor_blocks": [
+      "pipe = Pipeline([PolynomialFeatures(degree=2), StandardScaler(), Ridge()])",
+      "scores = cross_val_score(pipe, X, y, cv=5, scoring='accuracy')"
+    ],
+    "explanation": "PolynomialFeatures生成多项式特征，StandardScaler标准化，Ridge做回归。Pipeline需要(name, estimator)元组列表。neg_mean_squared_error取负用于MSE，取负恢复正值。"
+  },
+  {
+    "id": "c_algo_001",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "线性回归模型的基本原理是什么？",
+    "options": [
+      "A. 拟合一条直线使预测值与真实值的残差平方和最小",
+      "B. 最大化类间距离使分类准确率最高",
+      "C. 最小化信息增益以选择最优特征",
+      "D. 最大化后验概率来进行分类预测"
+    ],
+    "correct": 0,
+    "explanation": "线性回归通过最小化残差平方和（Ordinary Least Squares, OLS）来找到最佳拟合直线，即使得预测值与真实值之间的误差平方和（MSE）达到最小。这是线性回归最核心的优化目标。"
+  },
+  {
+    "id": "c_algo_002",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "在回归任务中，R²=0.85 表示什么？",
+    "options": [
+      "A. 模型解释了因变量85%的方差",
+      "B. 模型的预测准确率为85%",
+      "C. 85%的样本被正确分类",
+      "D. 模型的平均误差为15%"
+    ],
+    "correct": 0,
+    "explanation": "R²（决定系数，Coefficient of Determination）表示因变量的总方差中有多大比例可以被模型中的自变量解释。R²=0.85意味着模型能够解释目标变量85%的方差变异，剩余15%的方差由模型未捕获的因素造成。"
+  },
+  {
+    "id": "c_algo_003",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "Sigmoid（Logistic）函数的输出值范围是什么？",
+    "options": [
+      "A. (0, 1) 开区间",
+      "B. (-1, 1) 开区间",
+      "C. [0, 1] 闭区间",
+      "D. (-∞, +∞)"
+    ],
+    "correct": 0,
+    "explanation": "Sigmoid 函数 σ(x) = 1/(1+e^(-x)) 的值域严格为 (0, 1) 开区间。当 x→-∞ 时 σ(x)→0，当 x→+∞ 时 σ(x)→1，但永远不会等于 0 或 1。这一特性使其非常适合将线性输出映射为概率值。"
+  },
+  {
+    "id": "c_algo_004",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "标准逻辑回归的决策边界通常是什么样的？",
+    "options": [
+      "A. 线性的（直线、平面或超平面）",
+      "B. 总是圆形的闭合曲线",
+      "C. 一定是非线性曲线",
+      "D. 只能是一维空间中的点"
+    ],
+    "correct": 0,
+    "explanation": "标准逻辑回归的决策边界是线性的，因为其分类依据是特征的线性组合 w^T x + b = 0，这是一个线性方程，在高维空间中对应超平面。若需非线性决策边界，可以通过特征工程（如多项式特征）或使用核方法扩展。"
+  },
+  {
+    "id": "c_algo_005",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "决策树中信息增益（Information Gain）用于衡量什么？",
+    "options": [
+      "A. 使用某个特征划分后不确定性的减少程度",
+      "B. 数据集中样本的方差大小",
+      "C. 模型在测试集上的预测准确率",
+      "D. 两个特征之间的皮尔逊相关系数"
+    ],
+    "correct": 0,
+    "explanation": "信息增益（Information Gain）衡量的是使用某个特征划分数据集前后，信息熵（Entropy）减少的量。信息增益越大，说明使用该特征进行划分后数据的纯度提升越明显，该特征对分类的贡献越大。"
+  },
+  {
+    "id": "c_algo_006",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "基尼系数（Gini Impurity）在决策树中的作用是什么？",
+    "options": [
+      "A. 衡量节点的不纯度，值越小表示节点中样本类别越一致",
+      "B. 衡量模型在训练集上的过拟合程度",
+      "C. 计算两个特征之间的统计相关性",
+      "D. 评估模型在未见数据上的泛化能力"
+    ],
+    "correct": 0,
+    "explanation": "基尼系数（Gini Impurity）是CART决策树常用的不纯度度量指标。Gini = 1 - Σp_i²，其中p_i为第i类样本的比例。基尼系数越小，说明节点中样本的类别越纯（几乎全属于同一类），CART算法每次分裂都选择基尼系数最小的特征。"
+  },
+  {
+    "id": "c_algo_007",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "随机森林中 Bagging（Bootstrap Aggregating）的含义是什么？",
+    "options": [
+      "A. 通过Bootstrap自助采样生成多个训练子集，分别训练多个基学习器后聚合结果",
+      "B. 依次训练模型，每个新模型专门修正前一个模型的错误",
+      "C. 将所有特征直接拼接（Stacking）后一次性训练",
+      "D. 使用单一决策树进行无限深度训练直至过拟合"
+    ],
+    "correct": 0,
+    "explanation": "Bagging 是 Bootstrap Aggregating 的缩写，核心做法是：从原始训练集中有放回地采样生成多个不同的训练子集（Bootstrap采样），在每个子集上独立训练一个基学习器（决策树），最后通过投票（分类）或平均（回归）来聚合所有基学习器的预测结果。"
+  },
+  {
+    "id": "c_algo_008",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "随机森林用于分类任务时，最终预测结果是如何决定的？",
+    "options": [
+      "A. 多数投票机制——所有决策树投票，得票最多的类别作为最终预测",
+      "B. 取所有决策树预测概率的算术平均值",
+      "C. 始终选择第一棵决策树的预测结果",
+      "D. 随机选择一棵树的预测结果作为最终输出"
+    ],
+    "correct": 0,
+    "explanation": "随机森林在分类任务中采用多数投票（Majority Voting）机制：每棵决策树独立给出一个类别预测，最终统计所有树的投票结果，选择获得票数最多的类别。也可以使用概率投票（取所有树预测概率的平均值后选最大概率类别）。"
+  },
+  {
+    "id": "c_algo_009",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "SVM（支持向量机）的核心思想是什么？",
+    "options": [
+      "A. 寻找一个超平面，使其到最近样本点（支持向量）的间隔最大化",
+      "B. 最小化所有训练样本的分类误差之和",
+      "C. 随机初始化多个超平面然后投票选出最优",
+      "D. 对每个类别分别拟合一个独立的超平面"
+    ],
+    "correct": 0,
+    "explanation": "SVM 的核心是最大间隔分类（Maximum Margin Classification）——在特征空间中寻找一个最优超平面，使得该超平面到各类别最近样本点（支持向量）的距离（Margin）最大化。最大化间隔能够提升分类器的泛化能力，这是SVM最本质的设计思想。"
+  },
+  {
+    "id": "c_algo_010",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "KNN 算法中参数 K 的含义是什么？",
+    "options": [
+      "A. 对未知样本预测时参考的最近邻居的数量",
+      "B. 数据集被划分的簇的数量",
+      "C. 模型训练的迭代轮数",
+      "D. 输入特征的维度大小"
+    ],
+    "correct": 0,
+    "explanation": "KNN（K-Nearest Neighbors）中的 K 表示在对新样本进行预测时需要参考的最近训练样本个数。分类时取K个邻居中出现最多的类别（多数投票），回归时取K个邻居目标值的平均值。K是一个关键超参数，K值过小易受噪声影响，过大可能导致决策边界过于平滑。"
+  },
+  {
+    "id": "c_algo_011",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "朴素贝叶斯分类器基于哪个数学定理？",
+    "options": [
+      "A. 贝叶斯定理",
+      "B. 中心极限定理",
+      "C. 大数定律（LLN）",
+      "D. 勾股定理"
+    ],
+    "correct": 0,
+    "explanation": "朴素贝叶斯（Naive Bayes）分类器基于贝叶斯定理 P(Y|X) = P(X|Y)·P(Y) / P(X)，通过计算在给定特征X的条件下每个类别Y的后验概率，选择后验概率最大的类别作为预测结果。'朴素'指的是条件独立性假设。"
+  },
+  {
+    "id": "c_algo_012",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "K-Means 算法中，不同的初始质心选择会带来什么影响？",
+    "options": [
+      "A. 可能导致算法收敛到不同的局部最优解",
+      "B. 初始质心对最终聚类结果完全没有影响",
+      "C. 初始质心必须由用户手动指定而不能随机选择",
+      "D. 初始质心之间必须严格等距分布"
+    ],
+    "correct": 0,
+    "explanation": "K-Means 对初始质心敏感，不同的初始化可能导致算法收敛到不同的局部最优解，聚类质量差异可能很大。这正是 K-Means++ 初始化算法被提出的原因——通过让初始质心尽可能分散来减少陷入较差局部最优的概率。"
+  },
+  {
+    "id": "c_algo_013",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "K-Means 算法收敛的判断条件是什么？",
+    "options": [
+      "A. 质心位置不再发生变化或变化小于预设阈值",
+      "B. 迭代次数达到数据集样本数的平方",
+      "C. 所有样本点被分配到同一个簇中",
+      "D. 簇内距离恰好等于簇间距离"
+    ],
+    "correct": 0,
+    "explanation": "K-Means的收敛条件是质心位置不再显著变化（质心移动距离小于某个预设阈值，如1e-4），或达到最大迭代次数（max_iter）。由于每个迭代步都会减少或保持簇内平方和（SSE），算法保证在有限步内收敛。"
+  },
+  {
+    "id": "c_algo_014",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "PCA 中“方差解释率”（Explained Variance Ratio）表示什么？",
+    "options": [
+      "A. 某个主成分所保留的原始数据方差占总方差的比例",
+      "B. 模型在测试集上的预测准确率百分比",
+      "C. 每个原始特征被选入主成分的概率",
+      "D. 降维后样本被正确重建的比例"
+    ],
+    "correct": 0,
+    "explanation": "方差解释率表示每个主成分所捕获的原始数据方差占总方差的比例。通常用累计方差解释率来决定保留多少个主成分，常用阈值如95%或99%，即保留足够多的主成分使累计方差解释率达到阈值。"
+  },
+  {
+    "id": "c_algo_015",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "PCA（主成分分析）的第一个主成分方向是如何确定的？",
+    "options": [
+      "A. 原始数据中方差最大的方向",
+      "B. 任意随机指定的方向",
+      "C. 原始数据中方差最小的方向",
+      "D. 与所有原始特征轴都正交的方向"
+    ],
+    "correct": 0,
+    "explanation": "PCA的第一个主成分是原始数据中方差最大的方向（即数据投影到该方向上后方差最大）。后续的每个主成分在与之前所有主成分正交的约束下，依次寻找方差最大的方向。这确保了主成分之间线性无关，且按信息量降序排列。"
+  },
+  {
+    "id": "c_algo_016",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "层次聚类的结果通常用什么图形来可视化？",
+    "options": [
+      "A. 树状图（Dendrogram）",
+      "B. 散点图（Scatter Plot）",
+      "C. 热力图（Heatmap）",
+      "D. 箱线图（Box Plot）"
+    ],
+    "correct": 0,
+    "explanation": "树状图（Dendrogram）是层次聚类最经典的可视化工具，它展示了聚类的层次结构——从每个样本单独成簇开始，逐步合并最相似的簇，直到所有样本合并为一个簇。树状图的纵轴通常表示合并时的距离（或相似度），横轴为样本。"
+  },
+  {
+    "id": "c_algo_017",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "在线性回归中使用梯度下降法求解时，学习率（learning rate）设置过大会导致什么问题？",
+    "options": [
+      "A. 参数在最优解附近来回震荡甚至发散，损失函数值不降反升",
+      "B. 模型将永远无法开始训练",
+      "C. 自动获得更好的全局最优解",
+      "D. 所有特征被自动标准化为零均值"
+    ],
+    "correct": 0,
+    "explanation": "学习率（Learning Rate）控制每次参数更新的步长。学习率过大时，梯度下降可能在最优解附近来回震荡甚至完全越过最优解，导致损失函数值不降反升（发散）。选择合适的学习率（如0.1、0.01、0.001）对梯度下降的成功收敛至关重要。"
+  },
+  {
+    "id": "c_algo_018",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "逻辑回归使用的对数损失函数（Log Loss / Cross-Entropy）的数学表达式是什么？",
+    "options": [
+      "A. L = -[y·log(ŷ) + (1-y)·log(1-ŷ)]",
+      "B. L = (y - ŷ)²",
+      "C. L = |y - ŷ|",
+      "D. L = max(0, 1 - y·ŷ)"
+    ],
+    "correct": 0,
+    "explanation": "逻辑回归使用的损失函数是交叉熵（Cross-Entropy）：L = -[y·log(ŷ) + (1-y)·log(1-ŷ)]。这是从最大似然估计（MLE）推导而来的，相比MSE（均方误差），交叉熵在分类任务中对概率输出的梯度更合理，不会出现梯度消失的问题。"
+  },
+  {
+    "id": "c_algo_019",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "决策树剪枝（Pruning）的主要目的是什么？",
+    "options": [
+      "A. 防止过拟合，降低模型复杂度从而提高泛化能力",
+      "B. 加速模型训练过程，减少训练时间",
+      "C. 增加树的深度以便更好地拟合训练数据",
+      "D. 直接减少输入特征的数量"
+    ],
+    "correct": 0,
+    "explanation": "剪枝（Pruning）通过移除决策树中对泛化能力贡献不大的分支和节点，降低模型复杂度，从而防止决策树对训练数据中的噪声和异常值过度拟合。常见的剪枝策略包括预剪枝（如限制最大深度、最小样本数）和后剪枝（如代价复杂度剪枝）。"
+  },
+  {
+    "id": "c_algo_020",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "CART（分类与回归树）算法在选择划分特征时使用什么指标？",
+    "options": [
+      "A. 分类问题用基尼系数（Gini Index），回归问题用平方误差（MSE）",
+      "B. 分类和回归问题统一使用信息增益",
+      "C. 统一使用皮尔逊相关系数",
+      "D. 随机选择特征，不计算任何指标"
+    ],
+    "correct": 0,
+    "explanation": "CART（Classification And Regression Tree）是二叉树结构。对于分类任务，CART使用基尼系数（Gini Index）最小化来选择最优划分特征和划分点；对于回归任务，CART使用平方误差（MSE）最小化来确定最优划分。ID3使用信息增益，C4.5使用信息增益比。"
+  },
+  {
+    "id": "c_algo_021",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "随机森林在每棵树的每个节点分裂时如何引入特征随机性？",
+    "options": [
+      "A. 从所有特征中随机选取一个子集（如sqrt(n)个），仅在该子集中选择最优划分特征",
+      "B. 对每个特征随机生成分裂阈值",
+      "C. 随机决定当前节点是否进行分裂",
+      "D. 使用所有特征但为每个特征随机加权"
+    ],
+    "correct": 0,
+    "explanation": "随机森林的'随机'体现在两个层面：1）样本层面——Bootstrap有放回采样生成不同训练集；2）特征层面——在每个节点的分裂时，随机选取一部分特征（分类问题通常取 sqrt(n_features)，回归问题通常取 n_features/3），仅在这些特征中选择最优划分。这种双重随机性有效降低了树与树之间的相关性。"
+  },
+  {
+    "id": "c_algo_022",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "SVM中核技巧（Kernel Trick）的主要作用是什么？",
+    "options": [
+      "A. 隐式地将数据映射到高维空间，使线性不可分的数据变得可分，且无需显式计算高维映射",
+      "B. 直接降低原始数据的特征维度以加速计算",
+      "C. 自动选择SVM的最优超参数C和gamma",
+      "D. 在原始特征空间中直接拟合非线性决策边界"
+    ],
+    "correct": 0,
+    "explanation": "核技巧（Kernel Trick）通过核函数 K(x, y) = ⟨φ(x), φ(y)⟩ 隐式地计算高维空间中样本的内积，避免了显式将数据映射到高维空间的巨大计算开销（甚至可能是无限维）。常用的核函数包括线性核、RBF核（高斯核）、多项式核和Sigmoid核。"
+  },
+  {
+    "id": "c_algo_023",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "SVM中的软间隔（Soft Margin）是为了解决什么问题而引入的？",
+    "options": [
+      "A. 允许部分样本被错误分类或落在间隔内部，以处理数据不完全线性可分的情况",
+      "B. 大幅加快SVM模型的训练速度",
+      "C. 自动降低输入数据的特征维度",
+      "D. 强制增加支持向量的数量以提高稳定性"
+    ],
+    "correct": 0,
+    "explanation": "硬间隔SVM要求所有样本必须被正确分类且位于间隔之外，这在现实数据中往往不现实（存在噪声和异常值）。软间隔SVM引入松弛变量 ξ_i 和惩罚参数 C，允许部分样本违反间隔约束，C越大对误分类的惩罚越重。软间隔在间隔最大化和分类误差之间取得了实际可行的平衡。"
+  },
+  {
+    "id": "c_algo_024",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "在KNN中使用欧氏距离时，为什么特征标准化（Standardization）非常重要？",
+    "options": [
+      "A. 因为欧氏距离对特征的尺度（量纲）非常敏感，量级大的特征会主导距离计算",
+      "B. 因为标准化可以自动选择最优的K值",
+      "C. 因为标准化可以将KNN转换为线性模型",
+      "D. 因为标准化后欧氏距离等价于余弦相似度"
+    ],
+    "correct": 0,
+    "explanation": "欧氏距离 d = sqrt(Σ(x_i - y_i)²) 对特征的尺度非常敏感。如果某个特征的数值范围远大于其他特征（如收入vs年龄），该特征将主导距离计算，导致其他特征的作用被淹没。因此在使用KNN前，通常需要用StandardScaler或MinMaxScaler将所有特征缩放到相近的范围。"
+  },
+  {
+    "id": "c_algo_025",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "高斯朴素贝叶斯（GaussianNB）与多项式朴素贝叶斯（MultinomialNB）分别适用于什么类型的数据？",
+    "options": [
+      "A. GaussianNB适用于连续数值特征（近似正态分布），MultinomialNB适用于离散计数特征（如词频）",
+      "B. GaussianNB适用于文本数据，MultinomialNB适用于图像数据",
+      "C. 两者完全通用，可互换使用",
+      "D. GaussianNB适用于二值特征，MultinomialNB适用于连续特征"
+    ],
+    "correct": 0,
+    "explanation": "GaussianNB（高斯朴素贝叶斯）假设特征的似然概率服从高斯（正态）分布，适用于连续数值特征。MultinomialNB（多项式朴素贝叶斯）假设特征为离散计数（如词频），常用于文本分类。BernoulliNB（伯努利朴素贝叶斯）适用于二值特征（出现/不出现）。"
+  },
+  {
+    "id": "c_algo_026",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "肘部法则（Elbow Method）如何帮助确定K-Means中的最优K值？",
+    "options": [
+      "A. 绘制K值与簇内平方和（Inertia）的关系曲线，寻找曲线'弯折'的拐点作为最优K",
+      "B. 计算每个K值的分类准确率，选择准确率最高的K",
+      "C. 随机尝试多个K值后取所有结果的聚类平均",
+      "D. 始终使用样本总数的平方根作为K值"
+    ],
+    "correct": 0,
+    "explanation": "肘部法则（Elbow Method）通过绘制不同K值对应的簇内平方和（Inertia/SSE）变化曲线。随着K增大，Inertia单调递减，但递减速度会在最优K附近出现明显减缓（形成类似手臂肘部的拐点）。拐点之后增加K值带来的收益显著下降，该点即为推荐的K值。"
+  },
+  {
+    "id": "c_algo_027",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "在凝聚式层次聚类中，'完全链接'（Complete Linkage）使用什么策略来衡量簇间距离？",
+    "options": [
+      "A. 以两个簇中相距最远的两个样本之间的距离作为簇间距离",
+      "B. 以两个簇中相距最近的两个样本之间的距离作为簇间距离",
+      "C. 以两个簇的质心之间的欧氏距离作为簇间距离",
+      "D. 以两个簇中所有样本对的平均距离作为簇间距离"
+    ],
+    "correct": 0,
+    "explanation": "完全链接（Complete Linkage / Maximum Linkage）取两个簇中所有样本对的最大距离作为簇间距离：d(C₁, C₂) = max{d(a,b): a∈C₁, b∈C₂}。这种方法倾向于产生直径相近的紧凑球状簇。对比：单链接（Single Linkage）取最小距离，平均链接（Average Linkage）取平均距离。"
+  },
+  {
+    "id": "c_algo_028",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "梯度提升（Gradient Boosting）中学习率（learning rate / shrinkage）的作用是什么？",
+    "options": [
+      "A. 缩放每棵新树对模型的贡献，较小的学习率通常需要更多的树但泛化效果更优",
+      "B. 直接控制每棵决策树的最大深度",
+      "C. 决定Bootstrap采样时抽取样本的比例",
+      "D. 设定损失函数中正则化项的权重"
+    ],
+    "correct": 0,
+    "explanation": "学习率（Learning Rate 或 Shrinkage）用于缩放每棵新树对整体模型的贡献：F_m(x) = F_{m-1}(x) + ν·h_m(x)。较小的ν（如0.01-0.1）意味着每棵树只贡献一小步，通常需要更多树（n_estimators）来充分拟合，但这往往能带来更好的泛化性能。ν与树数量之间存在权衡。"
+  },
+  {
+    "id": "c_algo_029",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "线性回归的闭式解（Normal Equation）θ = (X^T X)^(-1) X^T y 与梯度下降法相比，以下哪个说法是正确的？",
+    "options": [
+      "A. 闭式解一步到位无需选择学习率，但当特征数n很大时计算X^T X的逆代价为O(n³)",
+      "B. 闭式解在任何情况下都比梯度下降法更快",
+      "C. 梯度下降法的求解精度总是高于闭式解",
+      "D. 当特征数大于样本数时闭式解无法给出任何解"
+    ],
+    "correct": 0,
+    "explanation": "闭式解（正规方程）的优势是不需要选择学习率、不需要迭代，一步算出精确解。但其计算 X^T X 逆矩阵的时间复杂度为 O(n³)（n为特征数），当 n > 10000 时计算代价极高。梯度下降的时间复杂度约为 O(k·m·n)（k为迭代次数，m为样本数），在特征数很大时更实用。当 X^T X 不可逆时（如特征数>样本数），可使用伪逆或加入L2正则化处理。"
+  },
+  {
+    "id": "c_algo_030",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "逻辑回归如何从二分类扩展到多分类问题？",
+    "options": [
+      "A. 使用Softmax回归（多项逻辑回归）或一对多（One-vs-Rest, OvR）策略",
+      "B. 直接使用Sigmoid函数同时输出多个类别的概率",
+      "C. 必须将多个二元逻辑回归模型串联成链式结构",
+      "D. 逻辑回归天生无法处理多分类问题"
+    ],
+    "correct": 0,
+    "explanation": "多分类逻辑回归有两种主流方法：(1) Softmax回归（Multinomial Logistic Regression），使用Softmax函数替代Sigmoid，直接输出所有类别的概率分布，P(y=k|x) = exp(w_k^T x) / Σexp(w_j^T x)；(2) 一对多（OvR）策略，为每个类别训练一个二分类器（该类别vs其余类别），预测时选择得分最高的类别。"
+  },
+  {
+    "id": "c_algo_031",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "在决策树的信息增益计算中，父节点熵 H(D)=1.0，按特征A划分后两个子节点的熵分别为 H(D₁)=0.5 和 H(D₂)=0.3，样本比例分别为 0.4 和 0.6，则信息增益是多少？",
+    "options": [
+      "A. 0.62",
+      "B. 0.20",
+      "C. 0.68",
+      "D. 0.50"
+    ],
+    "correct": 0,
+    "explanation": "信息增益 = 父节点熵 - 加权子节点熵之和 = H(D) - [p₁·H(D₁) + p₂·H(D₂)] = 1.0 - (0.4×0.5 + 0.6×0.3) = 1.0 - (0.20 + 0.18) = 1.0 - 0.38 = 0.62。加权平均是关键——样本多的子节点对条件熵的贡献更大。信息增益越大说明该特征的分类能力越强。"
+  },
+  {
+    "id": "c_algo_032",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "随机森林中的 OOB（Out-Of-Bag）误差是什么？它有什么实用价值？",
+    "options": [
+      "A. 使用每棵树训练时未被Bootstrap采样的样本（约36.8%）评估该树的误差并汇总，可作为无偏的泛化误差估计",
+      "B. 使用独立的测试集评估模型的预测误差",
+      "C. 计算模型在原始训练集上的拟合误差",
+      "D. K折交叉验证中每一折的验证误差"
+    ],
+    "correct": 0,
+    "explanation": "Bootstrap采样中，每个样本被选中的概率约为 1 - (1-1/m)^m ≈ 1 - 1/e ≈ 63.2%，即有约36.8%的样本未被选中（OOB样本）。这些OOB样本可以作为该棵树的天然验证集。将所有树的OOB预测汇总即可得到OOB误差估计，它非常接近交叉验证的结果但无需额外计算，是随机森林的一个重要特性。"
+  },
+  {
+    "id": "c_algo_033",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "SVM为什么要引入对偶问题（Dual Problem）？",
+    "options": [
+      "A. 对偶形式中数据仅以内积形式出现，便于引入核函数；且约束更简单，适合SMO等优化算法",
+      "B. 对偶问题的求解速度在任何情况下都优于原始问题",
+      "C. 原始问题无解时才使用对偶问题作为备选方案",
+      "D. 对偶问题不需要支持向量即可完成分类"
+    ],
+    "correct": 0,
+    "explanation": "SVM引入对偶问题有两个关键原因：(1) 在对偶形式中，训练数据仅以内积 ⟨x_i, x_j⟩ 的形式出现，这为核技巧（Kernel Trick）的引入提供了天然接口；(2) 对偶问题的约束条件更为简单（仅需拉格朗日乘子α_i ≥ 0），便于使用SMO（Sequential Minimal Optimization）等高效算法求解。此外，对偶形式自然地揭示了支持向量的概念。"
+  },
+  {
+    "id": "c_algo_034",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "KNN中的“维数灾难”（Curse of Dimensionality）具体指什么现象？",
+    "options": [
+      "A. 随着特征维度增加，数据点之间的距离趋于均匀化，最近邻与最远邻的区分度显著降低",
+      "B. 高维数据无法被人类可视化理解",
+      "C. 特征数量越多，模型越容易欠拟合训练数据",
+      "D. 高维数据中必然发生过拟合"
+    ],
+    "correct": 0,
+    "explanation": "维数灾难的核心是：在高维空间中，任意两点之间的欧氏距离趋于集中化和均匀化，所有点之间的距离变得几乎相等。这意味着'最近邻'和'最远邻'之间的差别变得微乎其微，KNN基于距离的判别能力急剧下降。这也从理论上解释了为什么在使用KNN前进行特征选择或降维（如PCA）非常重要。"
+  },
+  {
+    "id": "c_algo_035",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "朴素贝叶斯的'朴素'假设具体指什么？为什么该假设在现实中几乎不成立但算法仍常有效？",
+    "options": [
+      "A. 假设各特征在给定类别的条件下相互独立；虽然现实中特征常有相关性，但算法只需概率的相对排序正确即可",
+      "B. 假设所有类别的先验概率完全相等；现实中数据分布可以是不均衡的",
+      "C. 假设训练数据中没有任何噪声或异常值；现实中噪声普遍存在",
+      "D. 假设样本数量必须足够大到万级别；小样本情况下性能会崩溃"
+    ],
+    "correct": 0,
+    "explanation": "'朴素'指的是条件独立性假设：P(X₁,...,X_n | Y) = Π P(X_i | Y)，即给定类别时，所有特征相互独立。这在现实中几乎不成立（如'身高'和'体重'高度相关）。但朴素贝叶斯在许多场景下仍表现良好，因为它更关心的是后验概率 P(Y|X) 的相对大小而非绝对精确值——即使概率估计有偏，只要 argmax 结果正确即可。"
+  },
+  {
+    "id": "c_algo_036",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "K-Means++ 初始化算法相比随机初始化的核心改进是什么？",
+    "options": [
+      "A. 选择初始质心时，让新质心被选中的概率与其到已有质心的距离平方成正比，使质心尽可能分散",
+      "B. 每次迭代使用不同的距离度量方式（轮流使用欧氏距离和曼哈顿距离）",
+      "C. 自动从数据中学习确定最优的聚类数K",
+      "D. 使用全体样本的均值向量作为统一的初始质心"
+    ],
+    "correct": 0,
+    "explanation": "K-Means++ 的核心策略是：第一步随机选择第一个质心；之后每个新质心以与已有最近质心的距离平方成正比概率被选中（距离越远被选中概率越大），使得初始质心在数据空间中尽可能分散。这一简单改进显著提高了聚类质量和收敛速度，且已被sklearn设为默认初始化方式。"
+  },
+  {
+    "id": "c_algo_037",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "凝聚式层次聚类（Agglomerative）与分裂式层次聚类（Divisive）的根本区别是什么？",
+    "options": [
+      "A. 凝聚式自底向上（每个样本单独成簇后逐步合并），分裂式自顶向下（全体一个簇后逐步分裂）",
+      "B. 凝聚式适用于分类任务，分裂式适用于回归任务",
+      "C. 凝聚式使用欧氏距离，分裂式必须使用曼哈顿距离",
+      "D. 两者本质完全相同，仅在编程实现方式上有微小差异"
+    ],
+    "correct": 0,
+    "explanation": "凝聚式（Agglomerative）采用自底向上（Bottom-Up）策略：初始时每个样本单独构成一个簇，然后反复合并最相似的两个簇，直到满足停止条件。分裂式（Divisive）采用自顶向下（Top-Down）策略：初始时所有样本属于一个簇，然后反复将现有簇分裂为更小的子簇。实践中凝聚式层次聚类更为常用，分裂式的计算复杂度更高。"
+  },
+  {
+    "id": "c_algo_038",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "PCA（主成分分析）的数学本质是什么？",
+    "options": [
+      "A. 对数据协方差矩阵进行特征值分解，取前k大特征值对应的特征向量作为主成分（降维投影方向）",
+      "B. 对原始数据矩阵直接按列进行排序取前k列",
+      "C. 对数据矩阵进行LU分解后取上三角矩阵的前k列",
+      "D. 对数据进行奇异值分解（SVD）后取最小的k个奇异值对应的向量"
+    ],
+    "correct": 0,
+    "explanation": "PCA的数学本质是对中心化后的数据协方差矩阵 C = (1/n) X^T X 进行特征值分解：C v_i = λ_i v_i。特征值 λ_i 的大小表示沿对应特征向量 v_i 方向上的数据方差。取前k个最大特征值对应的特征向量构成投影矩阵 W，数据降维为 X' = XW。实践中常使用SVD直接对数据中心化矩阵分解来实现。"
+  },
+  {
+    "id": "c_algo_039",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "XGBoost（eXtreme Gradient Boosting）相比传统GBDT的主要改进不包括以下哪项？",
+    "options": [
+      "A. 使用随机梯度下降（SGD）替代梯度提升框架来更新模型",
+      "B. 在损失函数中显式加入正则化项（L1和L2）以防止过拟合",
+      "C. 使用损失函数的二阶泰勒展开（同时利用一阶和二阶梯度信息）",
+      "D. 支持特征级别的并行计算以加速节点分裂的搜索"
+    ],
+    "correct": 0,
+    "explanation": "XGBoost的核心改进包括：(1) 正则化目标函数（同时包含L1和L2正则）；(2) 使用二阶泰勒展开近似损失，利用Hessian信息；(3) 支持并行计算特征/节点分裂；(4) 列采样（Column Subsampling）；(5) 加权分位数草图等。但XGBoost的框架仍是梯度提升（Gradient Boosting），并未使用随机梯度下降（SGD）来替代它。SGD是神经网络中常用的优化算法。"
+  },
+  {
+    "id": "c_algo_040",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "以下哪项不属于经典线性回归的高斯-马尔可夫（Gauss-Markov）基本假设？",
+    "options": [
+      "A. 自变量之间必须完全独立（零相关性，即完全不存在多重共线性）",
+      "B. 误差项的期望值为零：E[ε_i] = 0",
+      "C. 误差项具有同方差性：Var(ε_i) = σ²（常数）",
+      "D. 误差项之间相互独立（无自相关）：Cov(ε_i, ε_j) = 0, i ≠ j"
+    ],
+    "correct": 0,
+    "explanation": "高斯-马尔可夫经典假设包括：线性性、误差均值为零、同方差性（Homoscedasticity）、误差无自相关、误差与自变量不相关。自变量之间完全独立（即零多重共线性）并不是经典假设——完全无共线性是理想情况，现实中弱共线性是可接受的（OLS仍然BLUE），只有强共线性才会导致系数估计不稳定。因此选项A不在经典假设之列。"
+  },
+  {
+    "id": "p_algo_001",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用 sklearn 进行线性回归模型的训练和预测。",
+    "context": "已有训练集 X_train, y_train 和测试集 X_test，请完成模型导入、训练和预测。",
+    "correct_blocks": [
+      "from sklearn.linear_model import LinearRegression",
+      "model = LinearRegression()",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "model = LinearRegressor()",
+      "model.train(X_train, y_train)"
+    ],
+    "explanation": "正确的步骤为：(1) 从 sklearn.linear_model 导入 LinearRegression 类；(2) 创建模型实例；(3) 调用 .fit() 方法训练模型；(4) 调用 .predict() 方法进行预测。注意 sklearn 中类名是 LinearRegression 而非 LinearRegressor，训练方法是 fit 而非 train。"
+  },
+  {
+    "id": "p_algo_002",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用 sklearn 进行逻辑回归模型的训练和预测。",
+    "context": "已有训练集 X_train, y_train 和测试集 X_test，目标为二分类任务。",
+    "correct_blocks": [
+      "from sklearn.linear_model import LogisticRegression",
+      "model = LogisticRegression()",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "model = LogisticRegressor()",
+      "y_pred = model.transform(X_test)"
+    ],
+    "explanation": "正确的步骤为：(1) 从 sklearn.linear_model 导入 LogisticRegression；(2) 创建模型实例；(3) 调用 .fit() 训练；(4) 调用 .predict() 获取分类预测。注意类名为 LogisticRegression 而非 LogisticRegressor，预测方法为 predict() 而非 transform()（transform用于数据变换而非预测）。"
+  },
+  {
+    "id": "p_algo_003",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用决策树分类器进行训练，设置最大深度为5和随机种子为42。",
+    "context": "已有训练集和测试集，需限制树深度防止过拟合。",
+    "correct_blocks": [
+      "from sklearn.tree import DecisionTreeClassifier",
+      "model = DecisionTreeClassifier(max_depth=5, random_state=42)",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "model = DecisionTreeClassifier(depth=5)",
+      "model.fit_transform(X_train, y_train)"
+    ],
+    "explanation": "正确的步骤为：(1) 从 sklearn.tree 导入 DecisionTreeClassifier；(2) 创建模型时使用 max_depth=5（正确参数名）和 random_state=42 确保可重复性；(3) fit() 训练；(4) predict() 预测。注意参数名是 max_depth 而非 depth，且 fit_transform 是PCA等方法使用的接口，决策树应使用 fit。"
+  },
+  {
+    "id": "p_algo_004",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用随机森林分类器的训练和预测，设置100棵树。",
+    "context": "已有训练集和测试集，使用随机森林进行集成学习。",
+    "correct_blocks": [
+      "from sklearn.ensemble import RandomForestClassifier",
+      "model = RandomForestClassifier(n_estimators=100, random_state=42)",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.tree import RandomForestClassifier",
+      "model = RandomForest(n_estimators=100)"
+    ],
+    "explanation": "正确的步骤为：(1) RandomForestClassifier 属于 sklearn.ensemble 模块而非 sklearn.tree；(2) 类名是 RandomForestClassifier 而非 RandomForest；(3) n_estimators 参数指定树的数量（默认100）；(4) random_state 确保结果可复现。之后 fit() 训练，predict() 预测。"
+  },
+  {
+    "id": "p_algo_005",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用RBF核的SVM分类器训练和预测，设置C=1.0。",
+    "context": "已有训练集 X_train, y_train 和测试集 X_test。",
+    "correct_blocks": [
+      "from sklearn.svm import SVC",
+      "model = SVC(kernel='rbf', C=1.0, random_state=42)",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.svm import SVM",
+      "model = SVC(kernel='radial')"
+    ],
+    "explanation": "正确的步骤为：(1) 从 sklearn.svm 导入 SVC（Support Vector Classifier）而非 SVM；(2) 核函数参数 kernel='rbf'（Radial Basis Function），'radial' 是错误的核名称；(3) C 参数控制正则化强度——C越小间隔越大、C越大对误分类惩罚越重。"
+  },
+  {
+    "id": "p_algo_006",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用KNN分类器（K=5）的训练和预测。",
+    "context": "已有训练集和测试集，使用K近邻算法进行分类。",
+    "correct_blocks": [
+      "from sklearn.neighbors import KNeighborsClassifier",
+      "model = KNeighborsClassifier(n_neighbors=5)",
+      "model.fit(X_train, y_train)",
+      "y_pred = model.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "model = KNNClassifier(k=5)",
+      "y_pred = model.knn_predict(X_test)"
+    ],
+    "explanation": "正确的步骤为：(1) 从 sklearn.neighbors 导入 KNeighborsClassifier；(2) 使用 n_neighbors=5（正确参数名）设置K值，而非 k=5；(3) 使用标准 fit/predict 接口。sklearn 中不存在 KNNClassifier 类和 knn_predict 方法。"
+  },
+  {
+    "id": "p_algo_007",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成KMeans聚类并获取聚类标签与质心坐标。",
+    "context": "待聚类的数据为 X（numpy数组），需要聚成3个簇。",
+    "correct_blocks": [
+      "from sklearn.cluster import KMeans",
+      "model = KMeans(n_clusters=3, random_state=42)",
+      "labels = model.fit_predict(X)",
+      "centroids = model.cluster_centers_"
+    ],
+    "distractor_blocks": [
+      "from sklearn.kmeans import KMeans",
+      "labels = model.predict(X)"
+    ],
+    "explanation": "正确的步骤为：(1) KMeans 位于 sklearn.cluster 模块而非 sklearn.kmeans；(2) 使用 fit_predict() 同时完成训练和获取标签（比分别调用 fit + predict 更简洁）；(3) cluster_centers_ 属性（注意末尾下划线，表示拟合后获得的属性）返回质心坐标。"
+  },
+  {
+    "id": "p_algo_008",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用PCA将数据降维到2维并输出各主成分的方差解释率。",
+    "context": "原始数据 X 为高维数组，需要降维到2维进行可视化。",
+    "correct_blocks": [
+      "from sklearn.decomposition import PCA",
+      "pca = PCA(n_components=2)",
+      "X_reduced = pca.fit_transform(X)",
+      "print('Explained variance ratio:', pca.explained_variance_ratio_)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.pca import PCA",
+      "X_reduced = pca.reduce(X, n=2)"
+    ],
+    "explanation": "正确的步骤为：(1) PCA 位于 sklearn.decomposition 模块而非 sklearn.pca；(2) n_components=2 指定保留2个主成分；(3) fit_transform() 同时拟合PCA并转换数据（这是PCA的标准用法）；(4) explained_variance_ratio_ 属性返回各主成分的方差解释率。正确的方法是 reduce。"
+  },
+  {
+    "id": "p_algo_009",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用 sklearn 计算并显示混淆矩阵。",
+    "context": "已有真实标签 y_test 和模型预测结果 y_pred。",
+    "correct_blocks": [
+      "from sklearn.metrics import confusion_matrix",
+      "y_pred = model.predict(X_test)",
+      "cm = confusion_matrix(y_test, y_pred)",
+      "print('Confusion Matrix:', cm)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.metrics import ConfusionMatrix",
+      "cm = confusion_matrix(y_pred, y_test)"
+    ],
+    "explanation": "正确的步骤为：(1) 函数名是小写的 confusion_matrix，不是大驼峰 ConfusionMatrix；(2) 参数顺序非常重要——confusion_matrix(y_true, y_pred)，真实标签在前、预测标签在后；(3) 需要先用 model.predict() 获取预测值再计算混淆矩阵。"
+  },
+  {
+    "id": "p_algo_010",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用5折交叉验证评估随机森林模型的准确率。",
+    "context": "已有特征矩阵 X 和标签 y，需要评估模型的平均准确率。",
+    "correct_blocks": [
+      "from sklearn.model_selection import cross_val_score",
+      "from sklearn.ensemble import RandomForestClassifier",
+      "model = RandomForestClassifier(random_state=42)",
+      "scores = cross_val_score(model, X, y, cv=5)",
+      "print('Mean accuracy:', scores.mean())"
+    ],
+    "distractor_blocks": [
+      "scores = cross_validate(model, X, y, folds=5)",
+      "from sklearn.validation import cross_val_score"
+    ],
+    "explanation": "正确的步骤为：(1) cross_val_score 位于 sklearn.model_selection（新版本）而非 sklearn.validation 或 sklearn.cross_validation；(2) 函数名是 cross_val_score 而非 cross_validate；(3) 折数参数是 cv=5 而非 folds=5；(4) scores.mean() 计算各折准确率的均值。"
+  },
+  {
+    "id": "p_algo_011",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成从随机森林模型中提取并排序特征重要性。",
+    "context": "需要分析训练好的随机森林模型中哪些特征最重要。",
+    "correct_blocks": [
+      "import numpy as np",
+      "from sklearn.ensemble import RandomForestClassifier",
+      "model = RandomForestClassifier(random_state=42).fit(X_train, y_train)",
+      "importances = model.feature_importances_",
+      "indices = np.argsort(importances)[::-1]"
+    ],
+    "distractor_blocks": [
+      "importances = model.feature_importance_",
+      "indices = np.sort(importances)[::-1]"
+    ],
+    "explanation": "正确的步骤为：(1) 属性名是 feature_importances_（复数，有末尾下划线），而非 feature_importance_；(2) np.argsort() 返回排序后的索引（用于获取按重要性排序的特征编号），结合 [::-1] 实现降序排列；(3) np.sort() 返回排序后的值而非索引，无法用于获取原始特征顺序。"
+  },
+  {
+    "id": "p_algo_012",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用GridSearchCV搜索随机森林的最优超参数组合。",
+    "context": "需要从 n_estimators=[50,100,200] 和 max_depth=[5,10,None] 中搜索最优参数。",
+    "correct_blocks": [
+      "from sklearn.model_selection import GridSearchCV",
+      "from sklearn.ensemble import RandomForestClassifier",
+      "param_grid = {'n_estimators': [50, 100, 200], 'max_depth': [5, 10, None]}",
+      "model = RandomForestClassifier(random_state=42)",
+      "grid = GridSearchCV(model, param_grid, cv=5)",
+      "grid.fit(X_train, y_train)\nprint('Best params:', grid.best_params_)"
+    ],
+    "distractor_blocks": [
+      "grid = GridSearch(RandomForestClassifier(), param_grid)",
+      "grid.train(X_train, y_train)"
+    ],
+    "explanation": "正确的步骤为：(1) 从 sklearn.model_selection 导入 GridSearchCV；(2) param_grid 以字典形式定义搜索空间；(3) GridSearchCV 的第一个参数是模型对象，第二个是参数网格；(4) cv=5 指定5折交叉验证；(5) 使用 fit 而非 train 进行训练；(6) best_params_ 属性查看最优参数。"
+  },
+  {
+    "id": "p_algo_013",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成数据划分并使用Pipeline组合标准化和逻辑回归的训练流程。",
+    "context": "需要先划分训练/测试集，再用Pipeline确保测试集使用训练集的标准化参数。",
+    "correct_blocks": [
+      "from sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler",
+      "from sklearn.linear_model import LogisticRegression\nfrom sklearn.model_selection import train_test_split",
+      "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)",
+      "pipeline = Pipeline([('scaler', StandardScaler()), ('clf', LogisticRegression())])",
+      "pipeline.fit(X_train, y_train)\ny_pred = pipeline.predict(X_test)"
+    ],
+    "distractor_blocks": [
+      "pipeline = Pipeline(StandardScaler(), LogisticRegression())",
+      "pipeline.add_step('scaler', StandardScaler())",
+      "pipeline.transform(X_train, y_train)"
+    ],
+    "explanation": "正确的步骤为：(1) 导入必要的模块；(2) 使用 train_test_split 划分数据，test_size=0.2 表示20%作为测试集；(3) Pipeline 接受一个步骤列表，每个步骤是 (名称, 转换器/估计器) 的元组；(4) Pipeline 必须传入元组列表而非直接传入对象；(5) pipeline.transform() 不存在——Pipeline 使用 fit/predict 接口。"
+  },
+  {
+    "id": "p_algo_014",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用肘部法则（Elbow Method）绘制不同K值下KMeans的Inertia曲线。",
+    "context": "需要在K=1到10之间搜索最优聚类数并可视化。",
+    "correct_blocks": [
+      "from sklearn.cluster import KMeans\nimport matplotlib.pyplot as plt",
+      "inertias = []",
+      "K_range = range(1, 11)",
+      "for k in K_range:\n    model = KMeans(n_clusters=k, random_state=42).fit(X)\n    inertias.append(model.inertia_)",
+      "plt.plot(K_range, inertias, marker='o')\nplt.xlabel('Number of clusters K')\nplt.ylabel('Inertia')\nplt.show()"
+    ],
+    "distractor_blocks": [
+      "inertias.append(model.score(X))",
+      "plt.bar(K_range, inertias)",
+      "K_range = range(0, 10)"
+    ],
+    "explanation": "正确的步骤为：(1) 导入KMeans和matplotlib；(2) K_range 从1开始（range(1,11)产生1到10），K从0开始无意义；(3) 循环中对每个K训练模型，model.inertia_ 返回簇内平方和（SSE）；(4) 使用 plt.plot 折线图（而非 bar 柱状图）来观察肘部拐点。model.score(X) 返回的是负的SSE的相反数，不同于inertia。"
+  },
+  {
+    "id": "p_algo_015",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成输出分类报告，包含精确率（Precision）、召回率（Recall）和F1分数。",
+    "context": "已有模型预测结果 y_pred 和真实标签 y_test。",
+    "correct_blocks": [
+      "from sklearn.metrics import classification_report",
+      "y_pred = model.predict(X_test)",
+      "report = classification_report(y_test, y_pred)",
+      "print(report)"
+    ],
+    "distractor_blocks": [
+      "from sklearn.metrics import accuracy_report",
+      "report = classification_report(y_pred, y_test)"
+    ],
+    "explanation": "正确的步骤为：(1) 函数名是 classification_report 而非 accuracy_report；(2) 必须先获取预测值 y_pred，再调用分类报告；(3) 参数顺序是 classification_report(y_true, y_pred)，真实标签在前、预测标签在后，顺序颠倒会导致结果混乱。"
+  },
+  {
+    "id": "p_algo_016",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用StandardScaler标准化数据后训练SVM分类器。",
+    "context": "SVM对特征尺度敏感，必须先标准化。注意训练集和测试集不能信息泄露。",
+    "correct_blocks": [
+      "from sklearn.preprocessing import StandardScaler\nfrom sklearn.svm import SVC",
+      "scaler = StandardScaler()",
+      "X_train_scaled = scaler.fit_transform(X_train)",
+      "X_test_scaled = scaler.transform(X_test)",
+      "model = SVC(kernel='rbf').fit(X_train_scaled, y_train)\ny_pred = model.predict(X_test_scaled)"
+    ],
+    "distractor_blocks": [
+      "X_train_scaled = scaler.fit(X_train)",
+      "X_test_scaled = scaler.fit_transform(X_test)",
+      "X_train_scaled = StandardScaler.transform(X_train)"
+    ],
+    "explanation": "关键点：(1) scaler.fit_transform(X_train) 在训练集上同时拟合参数并转换——这是正确的；(2) 测试集只能使用 scaler.transform(X_test)（使用训练集学到的均值和标准差），绝不能对测试集再用 fit_transform，否则会导致数据泄露；(3) scaler.fit() 只拟合不转换，需要与 transform 搭配使用；(4) StandardScaler.transform() 不可直接作为类方法调用，需要先创建实例。"
+  },
+  {
+    "id": "p_algo_017",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成对分类特征列进行独热编码（One-Hot Encoding）并合并回原数据集。",
+    "context": "DataFrame df 中有一列 'category' 需要独热编码，其余列保留。",
+    "correct_blocks": [
+      "from sklearn.preprocessing import OneHotEncoder\nimport pandas as pd",
+      "encoder = OneHotEncoder(sparse_output=False)",
+      "encoded = encoder.fit_transform(df[['category']])",
+      "X = pd.concat([df.drop('category', axis=1), pd.DataFrame(encoded)], axis=1)"
+    ],
+    "distractor_blocks": [
+      "encoder = OneHotEncoder(sparse=True)",
+      "encoded = encoder.encode(df[['category']])",
+      "X = df.drop('category', axis=1).append(pd.DataFrame(encoded))"
+    ],
+    "explanation": "关键点：(1) 新版sklearn中使用 sparse_output=False 返回密集数组（旧版为 sparse=False）；(2) fit_transform 是OneHotEncoder的方法，不是 encode；(3) pd.concat 沿列（axis=1）拼接原始特征和编码结果，append 是沿行追加数据（已弃用）。注意 df[['category']] 的双层方括号确保返回DataFrame而非Series。"
+  },
+  {
+    "id": "p_algo_018",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用PCA将高维数据降维到2维后进行散点图可视化。",
+    "context": "需要对高维特征数据 X 降维并可视化，颜色按标签 y 区分。",
+    "correct_blocks": [
+      "from sklearn.decomposition import PCA\nimport matplotlib.pyplot as plt",
+      "pca = PCA(n_components=2)",
+      "X_2d = pca.fit_transform(X)",
+      "plt.scatter(X_2d[:, 0], X_2d[:, 1], c=y, cmap='viridis')",
+      "plt.xlabel('First Principal Component')\nplt.ylabel('Second Principal Component')\nplt.colorbar()\nplt.show()"
+    ],
+    "distractor_blocks": [
+      "X_2d = pca.transform(X)",
+      "plt.plot(X_2d[:, 0], X_2d[:, 1])",
+      "pca = PCA(n_dimensions=2)"
+    ],
+    "explanation": "关键点：(1) PCA 参数为 n_components=2 而非 n_dimensions；(2) fit_transform 同时拟合PCA并转换数据（首次使用）；transform 仅在已拟合后使用——如果PCA未拟合直接调用 transform 会报错；(3) 可视化降维数据应用 plt.scatter 散点图而非 plt.plot 线图；(4) c=y 使不同类别的点显示不同颜色。"
+  },
+  {
+    "id": "p_algo_019",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用KFold手动进行5折交叉验证并计算每折准确率。",
+    "context": "需要手动控制交叉验证过程，以 numpy 数组 X, y 为输入。",
+    "correct_blocks": [
+      "from sklearn.model_selection import KFold\nfrom sklearn.metrics import accuracy_score\nimport numpy as np",
+      "kf = KFold(n_splits=5, shuffle=True, random_state=42)",
+      "accuracies = []",
+      "for train_idx, val_idx in kf.split(X):\n    model.fit(X[train_idx], y[train_idx])\n    y_pred = model.predict(X[val_idx])\n    accuracies.append(accuracy_score(y[val_idx], y_pred))",
+      "print('Mean accuracy:', np.mean(accuracies))"
+    ],
+    "distractor_blocks": [
+      "kf = KFold(n_folds=5)",
+      "for train, test in kf.split(X, y):",
+      "accuracies.append(model.score(X[val_idx], y_pred))"
+    ],
+    "explanation": "关键点：(1) KFold 的参数是 n_splits 而非 n_folds；(2) kf.split(X) 返回索引数组，不是 kf.split(X, y)（虽然后者也合法但 split(X) 更通用）；(3) 使用整数索引 X[train_idx] 切片 numpy 数组；(4) accuracy_score(y_true, y_pred) 需要真实标签和预测标签，model.score(X, y) 自动计算准确率但不能传入 y_pred。"
+  },
+  {
+    "id": "p_algo_020",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用 numpy 从零实现线性回归的梯度下降求解。",
+    "context": "给定特征矩阵 X（已添加截距项列）和标签 y，使用 MSE 损失函数的梯度下降。",
+    "correct_blocks": [
+      "import numpy as np",
+      "def gradient_descent(X, y, lr=0.01, epochs=1000):",
+      "    m, n = X.shape\n    theta = np.zeros(n)",
+      "    for _ in range(epochs):\n        grad = (2/m) * X.T @ (X @ theta - y)\n        theta -= lr * grad",
+      "    return theta"
+    ],
+    "distractor_blocks": [
+      "grad = (1/m) * X.T @ (X @ theta - y)",
+      "theta += lr * grad",
+      "theta = np.random.randn(n)"
+    ],
+    "explanation": "关键点：(1) MSE损失对 theta 的梯度是 (2/m) * X^T (Xθ - y)，系数是 2/m 而非 1/m（MSE的导数有因子2）；(2) 梯度下降是 theta -= lr * grad（减去梯度方向），而非加上（加上是梯度上升）；(3) 初始化为零向量 np.zeros(n) 是常见做法，np.random.randn 虽然也可行但需谨慎。"
+  },
+  {
+    "id": "p_algo_021",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用不同核函数（linear/rbf/poly）的SVM进行对比训练和评估。",
+    "context": "需要比较多种核函数在相同数据上的表现，输出各核函数的准确率。",
+    "correct_blocks": [
+      "from sklearn.svm import SVC",
+      "kernels = ['linear', 'rbf', 'poly']",
+      "for k in kernels:",
+      "    model = SVC(kernel=k, random_state=42).fit(X_train, y_train)",
+      "    print(f'Kernel {k}: Accuracy = {model.score(X_test, y_test):.3f}')"
+    ],
+    "distractor_blocks": [
+      "kernels = ['sigmoid', 'tanh', 'relu']",
+      "model = SVC(kernel_type=k).fit(X_train, y_train)",
+      "print(f'Kernel {k}: Loss = {model.loss_:.3f}')"
+    ],
+    "explanation": "关键点：(1) sklearn SVC 支持的核函数包括 'linear', 'rbf', 'poly', 'sigmoid' 等，'tanh' 和 'relu' 不是SVM核函数选项；(2) 参数名是 kernel 而非 kernel_type；(3) SVC 没有 loss_ 属性——分类准确率应使用 model.score(X_test, y_test) 计算；(4) 可以直接链式调用 .fit() 使代码更简洁。"
+  },
+  {
+    "id": "p_algo_022",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成绘制随机森林各特征重要性的水平条形图（降序排列）。",
+    "context": "模型 model 已训练好，feature_names 为特征名称列表，需要可视化特征重要性。",
+    "correct_blocks": [
+      "import matplotlib.pyplot as plt\nimport numpy as np",
+      "importances = model.feature_importances_",
+      "indices = np.argsort(importances)",
+      "plt.barh(range(len(importances)), importances[indices])",
+      "plt.yticks(range(len(importances)), [feature_names[i] for i in indices])\nplt.xlabel('Importance')\nplt.show()"
+    ],
+    "distractor_blocks": [
+      "indices = np.sort(importances)",
+      "plt.barh(range(len(importances)), importances)",
+      "plt.xticks(range(len(importances)), feature_names)"
+    ],
+    "explanation": "关键点：(1) np.argsort(importances) 返回按值从小到大排序的索引数组（用于重排条形图和标签），np.sort 返回排序后的值而非索引——无法用值来索引 feature_names；(2) plt.barh 是水平条形图，plt.yticks 设置Y轴标签（对应特征名）；(3) 不带 sorting 的版本会按原始特征顺序显示而非按重要性排序。"
+  },
+  {
+    "id": "p_algo_023",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成包含标准化、特征选择、模型训练和交叉验证评估的完整Pipeline。",
+    "context": "需要构建完整ML流程：标准化→选择最佳10个特征→随机森林分类→5折交叉验证评估。",
+    "correct_blocks": [
+      "from sklearn.pipeline import Pipeline\nfrom sklearn.preprocessing import StandardScaler",
+      "from sklearn.feature_selection import SelectKBest, f_classif\nfrom sklearn.ensemble import RandomForestClassifier",
+      "pipe = Pipeline([('scaler', StandardScaler()), ('select', SelectKBest(f_classif, k=10)), ('clf', RandomForestClassifier())])",
+      "from sklearn.model_selection import cross_val_score",
+      "scores = cross_val_score(pipe, X, y, cv=5)\nprint('CV scores:', scores, '\\nMean:', scores.mean())"
+    ],
+    "distractor_blocks": [
+      "from sklearn.feature_selection import SelectFromModel",
+      "pipe = Pipeline(steps=[StandardScaler, RandomForestClassifier])",
+      "pipe.add(SelectKBest(f_classif, k=10))"
+    ],
+    "explanation": "关键点：(1) SelectKBest 配合 f_classif 评分函数选择最佳K个特征，SelectFromModel 是另一种特征选择方式（基于模型的特征重要性）；(2) Pipeline 的参数是步骤元组列表，每个步骤需要 (名称, 对象) 格式，不能直接传类；(3) Pipeline 创建后不可用 .add() 追加步骤；(4) cross_val_score 自动处理训练/验证划分。"
+  },
+  {
+    "id": "p_algo_024",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成绘制学习曲线（Learning Curve）以诊断模型的偏差/方差问题。",
+    "context": "需要在不同训练集大小下观察训练得分和验证得分的变化趋势。",
+    "correct_blocks": [
+      "from sklearn.model_selection import learning_curve\nimport matplotlib.pyplot as plt\nimport numpy as np",
+      "train_sizes, train_scores, val_scores = learning_curve(model, X, y, cv=5, train_sizes=np.linspace(0.1, 1.0, 10))",
+      "train_mean = train_scores.mean(axis=1)\nval_mean = val_scores.mean(axis=1)",
+      "plt.plot(train_sizes, train_mean, 'o-', label='Training score')",
+      "plt.plot(train_sizes, val_mean, 'o-', label='Cross-validation score')",
+      "plt.xlabel('Training Examples')\nplt.ylabel('Score')\nplt.legend()\nplt.show()"
+    ],
+    "distractor_blocks": [
+      "from sklearn.metrics import learning_curve",
+      "train_sizes, train_scores = learning_curve(model, X, y)",
+      "plt.bar(train_sizes, train_mean)"
+    ],
+    "explanation": "关键点：(1) learning_curve 位于 sklearn.model_selection 而非 sklearn.metrics；(2) learning_curve 返回三个值：train_sizes, train_scores, val_scores（二维数组，行=不同训练大小，列=各折得分），不能只接收两个返回值；(3) .mean(axis=1) 对每行的各折分数取均值；(4) 学习曲线通常用折线图展示分数随训练样本数增加的变化趋势。"
+  },
+  {
+    "id": "p_algo_025",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用轮廓系数（Silhouette Score）评估不同K值下的KMeans聚类效果并选出最优K。",
+    "context": "需要使用轮廓系数在K=2到10之间找到最佳聚类数。",
+    "correct_blocks": [
+      "from sklearn.cluster import KMeans\nfrom sklearn.metrics import silhouette_score\nimport numpy as np",
+      "silhouette_scores = []",
+      "K_range = range(2, 11)",
+      "for k in K_range:\n    labels = KMeans(n_clusters=k, random_state=42).fit_predict(X)\n    silhouette_scores.append(silhouette_score(X, labels))",
+      "best_k = list(K_range)[np.argmax(silhouette_scores)]",
+      "print(f'Best K: {best_k}, Score: {max(silhouette_scores):.3f}')"
+    ],
+    "distractor_blocks": [
+      "score = silhouette_score(X, model.labels_)",
+      "best_k = np.argmax(silhouette_scores)",
+      "labels = model.fit_predict(X)\nsilhouette_scores.append(model.score(X))"
+    ],
+    "explanation": "关键点：(1) silhouette_score(X, labels) 需要数据和聚类标签两个参数；(2) KRange 从2开始（轮廓系数要求至少2个簇），range(2,11) 生成2到10；(3) np.argmax(silhouette_scores) 返回的是索引而非K值——需要用 list(K_range)[索引] 映射回实际的K值；(4) KMeans.score(X) 返回的是簇内平方和的负数，不是轮廓系数。"
+  },
+  {
+    "id": "p_algo_026",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成绘制ROC曲线并计算AUC值。",
+    "context": "模型已训练好，需要评估二分类器的ROC曲线和AUC。",
+    "correct_blocks": [
+      "from sklearn.metrics import roc_curve, auc\nimport matplotlib.pyplot as plt",
+      "y_score = model.predict_proba(X_test)[:, 1]",
+      "fpr, tpr, _ = roc_curve(y_test, y_score)",
+      "roc_auc = auc(fpr, tpr)",
+      "plt.plot(fpr, tpr, label=f'ROC curve (AUC = {roc_auc:.2f})')",
+      "plt.plot([0, 1], [0, 1], 'k--')\nplt.xlabel('False Positive Rate')\nplt.ylabel('True Positive Rate')\nplt.legend()\nplt.show()"
+    ],
+    "distractor_blocks": [
+      "y_score = model.predict(X_test)",
+      "fpr, tpr = roc_curve(y_test, y_score)",
+      "plt.scatter(fpr, tpr)"
+    ],
+    "explanation": "关键点：(1) ROC曲线需要预测概率而非硬分类标签——应使用 predict_proba(X_test)[:, 1] 获取正类概率，predict() 返回的是0/1标签；(2) roc_curve 返回三个值 fpr, tpr, thresholds，需要用 _ 占位接收thresholds；(3) 随机分类器的基准线 plt.plot([0,1], [0,1], 'k--') 用于对比；(4) 使用 plt.plot 而非 plt.scatter 绘制ROC曲线。"
+  },
+  {
+    "id": "p_algo_027",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "经典算法",
+    "question": "请排列代码块，完成使用GridSearchCV对梯度提升分类器进行多参数超参数调优。",
+    "context": "需要同时搜索 n_estimators、max_depth 和 learning_rate 的最优组合，共18种组合。",
+    "correct_blocks": [
+      "from sklearn.model_selection import GridSearchCV\nfrom sklearn.ensemble import GradientBoostingClassifier",
+      "param_grid = {'n_estimators': [100, 200], 'max_depth': [3, 5, 7], 'learning_rate': [0.01, 0.1, 0.2]}",
+      "model = GradientBoostingClassifier(random_state=42)",
+      "grid = GridSearchCV(model, param_grid, cv=5, scoring='accuracy')",
+      "grid.fit(X_train, y_train)\nprint('Best params:', grid.best_params_)\nprint('Best CV score:', grid.best_score_)"
+    ],
+    "distractor_blocks": [
+      "param_grid = {'n_estimators': 100, 'max_depth': 3}",
+      "grid = RandomSearchCV(GradientBoostingClassifier(), param_grid)",
+      "grid.evaluate(X_train, y_train)"
+    ],
+    "explanation": "关键点：(1) param_grid 的值必须是列表（即使只有一个候选值），{'n_estimators': 100} 不是有效格式——应为 {'n_estimators': [100]}；(2) GridSearchCV 使用穷举搜索所有参数组合（2×3×3=18种），RandomSearchCV 是随机搜索——两者是不同的类；(3) GridSearchCV 使用 fit() 训练而非 evaluate()；(4) best_params_ 和 best_score_ 属性需要在 fit() 之后才能访问。"
+  },
+  {
+    "id": "c_nn_001",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "感知机（Perceptron）模型的基本计算方式是什么？",
+    "options": [
+      "A. 对输入进行加权求和，再通过阶跃函数输出",
+      "B. 对输入进行卷积操作，再通过激活函数输出",
+      "C. 对输入进行池化操作，再通过全连接层输出",
+      "D. 对输入进行逐元素相乘，再通过 Softmax 输出"
+    ],
+    "correct": 0,
+    "explanation": "感知机是神经网络的基本单元，由 Frank Rosenblatt 于 1957 年提出。它的计算方式为：接收多个输入信号，每个信号乘以对应的权重，求和后加上偏置，再通过阶跃函数（如符号函数）产生二值输出（0 或 1）。这正是选项 A 所描述的'加权求和 + 阶跃函数'。卷积和池化是 CNN 的组成部分，Softmax 用于多分类输出层，均非感知机的核心计算方式。"
+  },
+  {
+    "id": "c_nn_002",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "单层感知机可以正确表示以下哪个逻辑门？",
+    "options": [
+      "A. XOR（异或门）",
+      "B. XNOR（同或门）",
+      "C. AND（与门）",
+      "D. 以上所有"
+    ],
+    "correct": 2,
+    "explanation": "单层感知机只能解决线性可分问题。AND 门和 OR 门是线性可分的——可以在二维平面上用一条直线将输出为 0 和输出为 1 的样本分开。而 XOR（异或）门是经典的非线性可分问题，无法用单层感知机表示，这也是 Marvin Minsky 在 1969 年指出的感知机局限性。要解决 XOR 问题，需要至少两层（一个隐藏层）的神经网络。"
+  },
+  {
+    "id": "c_nn_003",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "Sigmoid 激活函数的输出值范围是多少？",
+    "options": [
+      "A. [0, +∞)",
+      "B. (-1, 1)",
+      "C. (0, 1)",
+      "D. [-1, 1]"
+    ],
+    "correct": 2,
+    "explanation": "Sigmoid 函数的数学表达式为 σ(x) = 1/(1+e^(-x))。当 x→+∞ 时，σ(x)→1；当 x→-∞ 时，σ(x)→0。因此其输出值域为 (0, 1)，即开区间。注意 (0, 1) 表示不包含 0 和 1 端点（只能无限逼近）。选项 A 描述的是 ReLU 的范围，B 和 D 是 tanh 的范围 [-1, 1] 及其变体。"
+  },
+  {
+    "id": "c_nn_004",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "ReLU 激活函数的数学表达式是什么？",
+    "options": [
+      "A. f(x) = max(0.1x, x)",
+      "B. f(x) = x / (1 + e^(-x))",
+      "C. f(x) = max(0, x)",
+      "D. f(x) = (e^x - e^(-x)) / (e^x + e^(-x))"
+    ],
+    "correct": 2,
+    "explanation": "ReLU（Rectified Linear Unit，线性整流单元）的数学表达式为 f(x) = max(0, x)，即当 x>0 时输出 x，当 x≤0 时输出 0。选项 A 是 LeakyReLU 的表达式（系数 0.1 为典型值），选项 B 是 Sigmoid 乘 x 的变体（SiLU/Swish 的一部分），选项 D 是 tanh 函数的表达式。"
+  },
+  {
+    "id": "c_nn_005",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "损失函数（Loss Function）在神经网络训练中的作用是什么？",
+    "options": [
+      "A. 决定网络中使用哪种激活函数",
+      "B. 衡量模型预测值与真实标签之间的差距，作为优化的目标",
+      "C. 控制网络的层数和神经元数量",
+      "D. 决定使用哪种优化器进行参数更新"
+    ],
+    "correct": 1,
+    "explanation": "损失函数是衡量模型预测输出与真实标签之间不一致程度的函数。训练过程的目标就是最小化损失函数的值。损失函数为优化算法（如梯度下降）提供了优化方向和目标——通过计算损失对参数的梯度，指导参数如何更新以减少预测误差。激活函数的选择、网络结构的设计和优化器的选择虽然也重要，但它们都不是损失函数的职责。"
+  },
+  {
+    "id": "c_nn_006",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "均方误差（MSE）损失最常用于哪种类型的机器学习任务？",
+    "options": [
+      "A. 多分类任务",
+      "B. 二分类任务",
+      "C. 回归任务",
+      "D. 聚类任务"
+    ],
+    "correct": 2,
+    "explanation": "MSE（Mean Squared Error，均方误差）的公式为 L = (1/n) * Σ(y_i - ŷ_i)²，它衡量的是预测值与真实值之间差异的平方的平均值。这种连续数值的误差度量天然适合回归任务（如房价预测、温度预测）。分类任务通常使用交叉熵损失（Cross-Entropy），因为它能更好地处理概率分布之间的差异。聚类任务通常使用轮廓系数、DBI 等指标而非损失函数。"
+  },
+  {
+    "id": "c_nn_007",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "交叉熵损失（Cross-Entropy Loss）最常用于以下哪种场景？",
+    "options": [
+      "A. 回归任务",
+      "B. 分类任务",
+      "C. 图像生成任务",
+      "D. 特征降维任务"
+    ],
+    "correct": 1,
+    "explanation": "交叉熵损失衡量两个概率分布之间的差异，公式为 L = -Σ y_i * log(ŷ_i)。在分类任务中，y_i 是真实标签的 one-hot 编码，ŷ_i 是模型预测的概率（通常由 Softmax 输出）。交叉熵对错误预测的惩罚非常大（当一个样本的真实类别预测概率趋近于 0 时，log(0)→-∞，损失趋近无穷），这使得它比 MSE 更适合分类任务。"
+  },
+  {
+    "id": "c_nn_008",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "梯度下降算法的核心思想是什么？",
+    "options": [
+      "A. 随机尝试不同的参数值，保留使损失最小的参数",
+      "B. 沿着损失函数梯度的反方向更新参数，逐步逼近最小点",
+      "C. 对每个参数独立优化，不考虑参数间的相互关系",
+      "D. 每次更新参数时乘以一个大于 1 的系数，加速收敛"
+    ],
+    "correct": 1,
+    "explanation": "梯度下降的核心思想是：计算损失函数关于每个参数的偏导数（梯度），然后沿着梯度的反方向更新参数。因为梯度方向是函数值上升最快的方向，反方向就是下降最快的方向。更新公式为 θ = θ - η * ∇L(θ)，其中 η 是学习率。通过反复迭代这一过程，参数逐步收敛到损失函数的局部最小值。"
+  },
+  {
+    "id": "c_nn_009",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "学习率（Learning Rate）设置过大可能导致什么后果？",
+    "options": [
+      "A. 训练过程极其缓慢，永远无法收敛",
+      "B. 梯度消失，深层网络参数不再更新",
+      "C. 损失函数值在最小值附近震荡甚至发散，无法收敛",
+      "D. 模型自动选择更大的批量大小来补偿"
+    ],
+    "correct": 2,
+    "explanation": "学习率控制每次参数更新的步长。学习率过大时，参数更新步长太大，可能直接越过最小值点，导致损失在最小值附近来回震荡（overshooting），甚至越来越远（发散）。学习率过小则会导致收敛速度极其缓慢（选项 A）。梯度消失（选项 B）是由深层网络中的激活函数（如 Sigmoid）和权重初始化引起的，与学习率无关。选项 D 中批量大小与学习率是两个独立的超参数。"
+  },
+  {
+    "id": "c_nn_010",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "多层感知机（MLP）与单层感知机相比，最主要的区别是什么？",
+    "options": [
+      "A. MLP 使用不同的激活函数",
+      "B. MLP 包含至少一个隐藏层，能够学习非线性映射",
+      "C. MLP 不使用偏置项",
+      "D. MLP 只能处理二分类问题"
+    ],
+    "correct": 1,
+    "explanation": "多层感知机（MLP）由输入层、一个或多个隐藏层和输出层组成，层与层之间全连接。最关键的差异在于隐藏层的存在：隐藏层配合非线性激活函数，使 MLP 能够拟合复杂的非线性函数（通用逼近定理指出，具有足够多隐藏神经元的 MLP 可以以任意精度逼近任何连续函数）。单层感知机只能解决线性可分问题（如 AND 和 OR），无法处理 XOR 这样的非线性问题。"
+  },
+  {
+    "id": "c_nn_011",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "在卷积神经网络（CNN）中，卷积核（Filter/Kernel）的主要作用是什么？",
+    "options": [
+      "A. 将输入图像放大到更大的尺寸",
+      "B. 提取输入中的局部特征，如边缘、纹理等",
+      "C. 随机丢弃一部分像素以防止过拟合",
+      "D. 将所有像素值归一化到 [0, 1] 范围"
+    ],
+    "correct": 1,
+    "explanation": "卷积核（也叫滤波器）是 CNN 的核心组件。它是一个小的权重矩阵（如 3×3、5×5），在输入特征图上滑动（卷积操作），与局部区域做逐元素相乘再求和，从而提取局部特征。浅层卷积核倾向于学习边缘、角点、颜色等低级特征；深层卷积核则组合这些低级特征，学习纹理、物体部件等高级语义特征。"
+  },
+  {
+    "id": "c_nn_012",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "CNN 中的池化层（Pooling Layer）主要实现什么功能？",
+    "options": [
+      "A. 增加特征图的尺寸，提升模型表达能力",
+      "B. 对特征图进行降采样，减少参数数量并增强平移不变性",
+      "C. 对特征图进行线性变换，增加非线性",
+      "D. 将多个特征图合并成一个更加抽象的特征图"
+    ],
+    "correct": 1,
+    "explanation": "池化层对特征图进行降采样操作。常见的最大池化（Max Pooling）在局部窗口（如 2×2）内取最大值，平均池化（Average Pooling）取平均值。其主要作用包括：(1) 降低特征图的空间尺寸，减少后续层的参数量和计算量；(2) 提供一定的平移不变性（输入图像发生微小平移时，池化输出变化不大）；(3) 扩大后续层的感受野。选项 A 相反，池化是缩小尺寸的。"
+  },
+  {
+    "id": "c_nn_013",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "过拟合（Overfitting）的典型表现是什么？",
+    "options": [
+      "A. 模型在训练集和测试集上表现都很差",
+      "B. 模型在训练集上表现很好，但在测试集上表现明显变差",
+      "C. 模型在训练集上表现很差，但在测试集上表现很好",
+      "D. 模型的损失函数始终无法下降"
+    ],
+    "correct": 1,
+    "explanation": "过拟合是指模型过度学习了训练数据中的噪声和细节模式，导致泛化能力下降。其典型表现为训练集上的损失很低（准确率很高），但验证集/测试集上的表现远不如训练集。与之相对的是欠拟合（选项 A），即模型还没学到数据的基本规律，在训练集和测试集上都表现差。选项 C 在理论上几乎不可能发生（没有模型能在测试集上好过训练集很多）。"
+  },
+  {
+    "id": "c_nn_014",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "L2 正则化（权重衰减）的基本思想是什么？",
+    "options": [
+      "A. 在损失函数中加入权重绝对值的和，促使权重稀疏化",
+      "B. 在损失函数中加入权重平方和，限制权重不要过大",
+      "C. 随机将一部分神经元的输出设为 0",
+      "D. 在训练过程中逐渐减小学习率"
+    ],
+    "correct": 1,
+    "explanation": "L2 正则化（也叫 Ridge 正则化或权重衰减）在损失函数中添加一项 λ * Σ w²，即所有权重的平方和乘以正则化系数 λ。这一项惩罚过大的权重值，鼓励模型学习较小的权重，从而降低模型复杂度，减少过拟合。选项 A 描述的是 L1 正则化（Lasso），它使用权重绝对值的和，会产生稀疏的权重矩阵。选项 C 描述的是 Dropout。选项 D 描述的是学习率衰减策略。"
+  },
+  {
+    "id": "c_nn_015",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "迁移学习（Transfer Learning）的基本做法是什么？",
+    "options": [
+      "A. 从头开始随机初始化参数，在目标数据集上直接训练",
+      "B. 将在大数据集上预训练好的模型参数作为初始值，在目标数据上微调",
+      "C. 使用多个不同模型进行集成预测",
+      "D. 将训练好的模型部署到不同硬件平台上"
+    ],
+    "correct": 1,
+    "explanation": "迁移学习的核心思想是将在一个大型数据集（如 ImageNet）上预训练好的模型权重，迁移到目标任务的模型上，作为初始值或固定特征提取器，然后在目标数据集上进行微调（Fine-tuning）。这样做的好处是：(1) 目标数据量较少时也能训练出较好的模型；(2) 加速收敛，预训练权重已经学到了通用的低级特征（边缘、纹理等）；(3) 减少计算资源消耗。"
+  },
+  {
+    "id": "c_nn_016",
+    "type": "concept",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "随机梯度下降（SGD）中的“随机”指的是什么？",
+    "options": [
+      "A. 随机初始化网络中的所有参数",
+      "B. 每次迭代随机选择一个样本（或小批量样本）来估计梯度",
+      "C. 学习率在每次迭代中随机变化",
+      "D. 随机选择使用哪种激活函数"
+    ],
+    "correct": 1,
+    "explanation": "SGD 的'随机'体现在每次参数更新时，不是使用整个训练集的真实梯度（批量梯度下降 BGD），而是从训练集中随机抽样一个样本（最严格的定义）或一个小批量（Mini-batch SGD）来计算梯度的估计值。这种随机性带来的好处包括：(1) 大大减少了每次更新的计算量；(2) 梯度估计中的噪声有助于跳出局部最小值；(3) 可以实现在线学习，逐步处理新的样本。"
+  },
+  {
+    "id": "c_nn_017",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "单层感知机无法解决 XOR 问题的根本原因是什么？",
+    "options": [
+      "A. XOR 问题的输入维度太高",
+      "B. XOR 问题是线性不可分的",
+      "C. XOR 问题的样本数量太多",
+      "D. XOR 问题需要用到复数运算"
+    ],
+    "correct": 1,
+    "explanation": "XOR（异或）问题的真值表为：(0,0)→0, (0,1)→1, (1,0)→1, (1,1)→0。在二维平面上绘制这四个点时，不存在一条直线能将输出为 0 的点与输出为 1 的点分开——这两个类别是线性不可分的。单层感知机的决策边界是一条直线（在二维情况）或超平面（在高维情况），因此无法解决 XOR 问题。要解决 XOR，需要引入隐藏层使网络具有非线性决策边界的能力。这个发现由 Minsky 和 Papert 在 1969 年《Perceptrons》一书中指出，导致了第一次 AI 寒冬。"
+  },
+  {
+    "id": "c_nn_018",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "与 Sigmoid 相比，tanh 激活函数有什么优势？",
+    "options": [
+      "A. tanh 的输出范围更大，为 (-∞, +∞)",
+      "B. tanh 是零均值（zero-centered）输出，有助于加速收敛",
+      "C. tanh 的计算速度比 Sigmoid 快很多",
+      "D. tanh 没有梯度消失问题"
+    ],
+    "correct": 1,
+    "explanation": "tanh 的输出值域为 (-1, 1)，均值为 0（零均值/zero-centered）。而 Sigmoid 的输出值域为 (0, 1)，均值约为 0.5，不是零均值的。在深层网络中，如果激活函数的输出恒为正（如 Sigmoid），则下一层权重的梯度会呈现一致的符号，导致参数更新时出现'锯齿形'优化路径，减缓收敛（这一现象称为 zig-zagging）。tanh 的零均值特性有助于缓解这个问题。不过 tanh 和 Sigmoid 一样存在梯度消失问题（饱和区导数为 0），计算复杂度也类似（都涉及指数运算）。"
+  },
+  {
+    "id": "c_nn_019",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "Hinge Loss 通常与哪种模型配合使用？",
+    "options": [
+      "A. 线性回归",
+      "B. K-means 聚类",
+      "C. 支持向量机（SVM）",
+      "D. 生成对抗网络（GAN）"
+    ],
+    "correct": 2,
+    "explanation": "Hinge Loss（铰链损失）是支持向量机（SVM）的标准损失函数。其公式为 L = max(0, 1 - y * ŷ)，其中 y 是真实标签（取 +1 或 -1），ŷ 是模型输出。Hinge Loss 的特性是：当样本被正确分类且距决策边界的距离（margin）大于 1 时，损失为 0；只有当样本在 margin 内或被错误分类时，才产生损失。这与 SVM 追求最大化分类间隔（margin maximization）的核心思想高度契合。"
+  },
+  {
+    "id": "c_nn_020",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "关于批量梯度下降（BGD）、随机梯度下降（SGD）和小批量梯度下降（Mini-batch GD），以下哪个说法是正确的？",
+    "options": [
+      "A. BGD 每次使用全部训练样本，梯度估计最准确但计算成本最高",
+      "B. SGD 每次使用所有样本，因此收敛最稳定",
+      "C. Mini-batch GD 完全不使用梯度信息，随机更新参数",
+      "D. BGD 每次只使用一个样本，因此收敛最快"
+    ],
+    "correct": 0,
+    "explanation": "三种梯度下降变体的区别在于每次更新使用的样本量：(1) BGD（批量梯度下降）使用全部训练样本计算梯度，梯度方向最准确，但计算开销大，当数据集很大时不可行；(2) SGD（随机梯度下降）每次只用一个样本，计算快但梯度估计噪声大，收敛路径不稳定；(3) Mini-batch GD 折中方案，每次使用小批量样本（如 32、64、128），既保证了一定的梯度准确性，又维持了合理的计算效率，是深度学习中最常用的方式。"
+  },
+  {
+    "id": "c_nn_021",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "Momentum（动量）优化器相比普通 SGD 的核心改进是什么？",
+    "options": [
+      "A. 它自动调整学习率，对每个参数使用不同的学习率",
+      "B. 它累积历史梯度信息，在一致的方向上加速更新，减少震荡",
+      "C. 它每次随机丢弃一部分梯度，增加优化的随机性",
+      "D. 它使用二阶导数信息（Hessian 矩阵）来指导参数更新"
+    ],
+    "correct": 1,
+    "explanation": "Momentum 优化器引入了一个速度变量 v，模拟物理学中的动量概念：v = β*v + (1-β)*∇L，θ = θ - η*v。其中 β 是动量系数（通常为 0.9）。当连续多次梯度方向一致时，速度 v 会累积增大，从而加速在这一方向上的更新；当梯度方向反复变化（震荡）时，速度的累积会抵消震荡，使得参数更新更平滑。选项 A 描述的是自适应学习率优化器（如 Adam）的特性，选项 D 描述的是牛顿法等二阶优化方法。"
+  },
+  {
+    "id": "c_nn_022",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "反向传播算法（Backpropagation）的核心数学原理是什么？",
+    "options": [
+      "A. 利用泰勒展开将损失函数近似为线性函数",
+      "B. 利用链式法则（Chain Rule）从输出层向输入层逐层计算梯度",
+      "C. 利用主成分分析（PCA）对梯度进行降维",
+      "D. 利用蒙特卡洛采样估计梯度值"
+    ],
+    "correct": 1,
+    "explanation": "反向传播算法的核心是微积分中的链式法则（Chain Rule）。在计算图中，损失 L 是关于输入 x 的复合函数，通过多层变换：L = f(g(h(x)))。反向传播从输出层的损失开始，按链式法则逐层向前计算每一层参数的梯度：∂L/∂w = ∂L/∂y * ∂y/∂w。它将前向传播中保存的中间值（激活值）与从后面传来的梯度相乘（'局部梯度 × 上游梯度'），高效地计算出所有参数的梯度，避免了重复计算。"
+  },
+  {
+    "id": "c_nn_023",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "在 CNN 中，感受野（Receptive Field）的含义是什么？",
+    "options": [
+      "A. 卷积核本身的尺寸（如 3×3）",
+      "B. 卷积层输出特征图上一个像素对应到原始输入图像上的区域大小",
+      "C. 卷积层中对输入进行零填充（zero-padding）的范围",
+      "D. 最大池化操作中取最大值的窗口大小"
+    ],
+    "correct": 1,
+    "explanation": "感受野是指卷积神经网络中某一层输出特征图上的一个像素点，在原始输入图像上所对应的区域大小。例如，一个 3×3 卷积层的感受野就是 3×3。但当网络中堆叠多层卷积时，深层神经元的感受野会显著扩大：两层 3×3 卷积的感受野等效为 5×5，三层等效为 7×7。较大的感受野意味着神经元能'看到'更大范围的输入信息，这对理解全局上下文和高级语义特征至关重要。"
+  },
+  {
+    "id": "c_nn_024",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "循环神经网络（RNN）与传统前馈神经网络最本质的区别是什么？",
+    "options": [
+      "A. RNN 使用不同的激活函数",
+      "B. RNN 拥有循环连接，能够处理序列数据并保持“记忆”",
+      "C. RNN 只能处理固定长度的输入",
+      "D. RNN 不使用反向传播算法进行训练"
+    ],
+    "correct": 1,
+    "explanation": "RNN 的核心特点是拥有循环连接（recurrent connections）——隐藏层的输出不仅传递给下一层，还作为下一时间步的输入传递回自身。这种结构使 RNN 天然适合处理序列数据（文本、语音、时间序列等），因为它在处理当前时刻输入时，能结合之前时刻的'记忆'（隐藏状态）。而传统前馈网络假设输入之间相互独立，无法建模序列中的时序依赖关系。RNN 同样使用反向传播算法进行训练（具体是 BPTT——沿时间反向传播）。"
+  },
+  {
+    "id": "c_nn_025",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "批归一化（Batch Normalization）层的主要作用是什么？",
+    "options": [
+      "A. 将每层的输出归一化，使其均值为 0 方差为 1，加速训练并稳定训练过程",
+      "B. 增大模型的参数量，提高模型的拟合能力",
+      "C. 对每个样本的输入数据做归一化预处理",
+      "D. 将模型输出的类别概率归一化，使其和为 1"
+    ],
+    "correct": 0,
+    "explanation": "BatchNorm 在每个小批量（mini-batch）上对每一层的激活值进行归一化：计算该批量内所有样本的均值和方差，然后将激活值标准化为均值为 0、方差为 1 的分布，再通过可学习的缩放参数 γ 和偏移参数 β 对标准化结果进行仿射变换。其好处包括：(1) 减少内部协变量偏移（Internal Covariate Shift）；(2) 允许使用更高的学习率，加速训练；(3) 有一定的正则化效果；(4) 减轻对权重初始化的敏感度。"
+  },
+  {
+    "id": "c_nn_026",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "Dropout 在训练阶段是如何工作的？",
+    "options": [
+      "A. 随机删除整个网络层，减少网络深度",
+      "B. 以概率 p 随机将一部分神经元的输出置为 0，每次迭代使用不同的“子网络”",
+      "C. 给每个神经元的输出乘以一个小于 1 的固定系数",
+      "D. 随机增加额外的噪声神经元来增强模型的鲁棒性"
+    ],
+    "correct": 1,
+    "explanation": "Dropout 由 Hinton 等人提出。在训练阶段的每次前向传播中，以概率 p（dropout rate，如 0.5）随机将一部分神经元的激活值置为 0（即“丢弃”它们），被丢弃的神经元在本次前向和反向传播中不参与计算。这相当于每次训练迭代都在使用一个不同的稀疏子网络。在推理（测试）阶段，所有神经元都激活，但输出要乘以 (1-p)（或等效地在训练时除以 (1-p)——即 inverted dropout），以保证激活值的期望值不变。Dropout 有效防止了神经元之间的共适应（co-adaptation），是一种强有力的正则化手段。"
+  },
+  {
+    "id": "c_nn_027",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "早停法（Early Stopping）防止过拟合的依据是什么？",
+    "options": [
+      "A. 当训练损失降到 0 时立即停止训练",
+      "B. 监控验证集上的损失，当验证损失不再下降反而开始上升时停止训练",
+      "C. 训练固定的轮数后自动停止",
+      "D. 当学习率衰减到一定阈值后停止训练"
+    ],
+    "correct": 1,
+    "explanation": "早停法的核心原理是：在训练过程中同时监控训练集和验证集的损失。通常，训练初期训练损失和验证损失都下降；但随着训练的进行，模型开始过拟合——训练损失继续下降，但验证损失开始上升。早停法在验证损失达到最小值后不再改善（或开始恶化）时停止训练，并恢复到验证损失最优时的模型参数。这相当于在'欠拟合'和'过拟合'之间找到了最佳平衡点，防止模型过度记忆训练数据的噪声。"
+  },
+  {
+    "id": "c_nn_028",
+    "type": "concept",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "数据增强（Data Augmentation）缓解过拟合的原理是什么？",
+    "options": [
+      "A. 通过增加训练样本数量和多样性，使模型学习到更鲁棒的特征",
+      "B. 通过减少模型参数的数量来简化模型",
+      "C. 通过增加模型层数使模型容量更大",
+      "D. 通过改变损失函数的形式使模型更好优化"
+    ],
+    "correct": 0,
+    "explanation": "数据增强通过对现有训练样本施加各种可保留标签语义的变换（如图像的随机裁剪、翻转、旋转、颜色抖动；文本的同义词替换、回译等），在不收集新数据的前提下有效扩大了训练集的规模和多样性。这使得模型接触到更多样的数据变体，从而学到了对变换不敏感、更加本质的特征，减少了过拟合的可能。数据增强本质上是一种隐式的正则化手段，不需要修改模型结构或损失函数。"
+  },
+  {
+    "id": "c_nn_029",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "深层网络中使用 Sigmoid 或 tanh 激活函数容易导致梯度消失的根本原因是什么？",
+    "options": [
+      "A. Sigmoid 和 tanh 的导数最大值为 1，多层连乘后梯度指数级衰减",
+      "B. Sigmoid 和 tanh 的导数恒大于 1，导致梯度不断缩小",
+      "C. Sigmoid 和 tanh 的导数在 0 附近最大，而深度网络中各层输入恰好集中在 0 附近",
+      "D. 梯度消失完全是由参数初始化方式决定的问题，与激活函数无关"
+    ],
+    "correct": 0,
+    "explanation": "Sigmoid 的导数 σ'(x) = σ(x)*(1-σ(x))，最大值为 0.25（在 x=0 处取得）；tanh 的导数最大值为 1（在 x=0 处取得）。当输入值较大或较小时，导数趋近于 0（饱和区）。在深层网络中，反向传播通过链式法则逐层连乘梯度。由于每层的局部梯度 ≤1（通常远小于 1），经过多层连乘后梯度呈指数级衰减，导致靠近输入层的浅层参数几乎无法获得有效的梯度信号，参数更新停滞。ReLU 的导数在正半轴恒为 1，有效缓解了梯度消失问题。"
+  },
+  {
+    "id": "c_nn_030",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "梯度爆炸（Exploding Gradient）的典型表现和主要原因是什么？",
+    "options": [
+      "A. 损失函数值突然变为负数",
+      "B. 权重初始化过大或层间梯度连乘导致梯度值指数级增大，训练中损失突然变为 NaN",
+      "C. 学习率设置过小导致梯度在参数空间中累积爆炸",
+      "D. Dropout 丢弃率设置过高导致的副作用"
+    ],
+    "correct": 1,
+    "explanation": "梯度爆炸是梯度消失的'镜像'问题：当每层权重的值较大时，反向传播中链式法则连乘的梯度可能指数级增长（例如每层梯度都是 2，经过 50 层就是 2^50 ≈ 1e15）。其典型表现为：训练曲线出现剧烈震荡，损失值突然跳变，最终变为 NaN 或 Inf。解决方案包括：(1) 梯度裁剪（Gradient Clipping），设定梯度范数的上限；(2) 使用更合理的权重初始化方法（如 Xavier/Glorot 初始化、He 初始化）；(3) 使用 BatchNorm 来稳定每层的激活值分布。"
+  },
+  {
+    "id": "c_nn_031",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "Adam 优化器结合了哪两种优化方法的优点？",
+    "options": [
+      "A. SGD 和牛顿法",
+      "B. Momentum 和 RMSprop",
+      "C. 遗传算法和梯度下降",
+      "D. L-BFGS 和共轭梯度法"
+    ],
+    "correct": 1,
+    "explanation": "Adam（Adaptive Moment Estimation）结合了 Momentum 和 RMSprop 的核心思想。具体来说：(1) 像 Momentum 一样维护梯度的一阶矩估计（指数移动平均 m_t），为参数更新提供动量，加速收敛并减少震荡；(2) 像 RMSprop 一样维护梯度的二阶矩估计（指数移动平均 v_t），对每个参数自适应地调整学习率——梯度大的参数使用较小的有效学习率，梯度小的参数使用较大的有效学习率。Adam 还包含了偏差校正（bias correction）机制，在训练初期对一阶和二阶矩估计进行修正。"
+  },
+  {
+    "id": "c_nn_032",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "RMSprop 优化器与 Adam 的一个关键区别是什么？",
+    "options": [
+      "A. RMSprop 不使用动量，而 Adam 使用了一阶动量",
+      "B. RMSprop 使用 Hessian 矩阵，而 Adam 不使用",
+      "C. RMSprop 只能用于 CNN，Adam 只能用于 RNN",
+      "D. RMSprop 不进行偏差校正，而 Adam 进行了偏差校正"
+    ],
+    "correct": 0,
+    "explanation": "RMSprop（Root Mean Square Propagation）的核心公式为：E[g²]_t = β*E[g²]_{t-1} + (1-β)*g_t²，θ_{t+1} = θ_t - η*g_t/√(E[g²]_t + ε)。它将梯度除以历史梯度平方的指数移动平均的平方根，从而对每个参数实现自适应学习率。Adam 在 RMSprop 的基础上增加了动量项（一阶矩估计 m_t = β₁*m_{t-1} + (1-β₁)*g_t），结合了两者的优势。至于偏差校正（bias correction），Adam 确实使用了它来解决初始时刻一阶和二阶矩估计偏向 0 的问题，但这不是 RMSprop 与 Adam 最核心的区别——核心区别是 Adam 多了一阶动量。"
+  },
+  {
+    "id": "c_nn_033",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "在多分类任务中，为什么通常将 Softmax 与交叉熵损失搭配使用？",
+    "options": [
+      "A. Softmax 将输出映射为概率分布，交叉熵衡量两个概率分布在统计意义上的差异",
+      "B. Softmax 可以加速交叉熵的计算速度",
+      "C. 交叉熵要求输入为整数，Softmax 恰好输出整数",
+      "D. 这只是历史习惯，没有特别的数学原因"
+    ],
+    "correct": 0,
+    "explanation": "Softmax 函数将原始的 logits（未归一化的得分）转换为概率分布：p_i = exp(z_i) / Σ_j exp(z_j)，保证所有输出在 (0,1) 之间且和为 1。交叉熵 H(p,q) = -Σ p_i * log(q_i) 是衡量两个概率分布 p（真实分布）和 q（预测分布）差异的标准方法。两者搭配使用时，有一个重要的数值/梯度特性：Softmax + 交叉熵的联合梯度非常简洁——∂L/∂z_i = p_i - y_i（预测概率减去真实标签），不会有 Sigmoid + MSE 那样的梯度平坦问题，从而保证了训练的效率和稳定性。"
+  },
+  {
+    "id": "c_nn_034",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "为什么分类任务使用交叉熵损失通常优于 MSE 损失？",
+    "options": [
+      "A. MSE 的梯度在预测接近真实值时仍然很大，导致训练不稳定",
+      "B. 交叉熵的梯度与预测误差 (p - y) 成正比，预测越不对梯度越大；而 MSE + Sigmoid 的组合在输出接近 0 或 1 时梯度会消失",
+      "C. MSE 不能处理多分类问题，只能用于二分类",
+      "D. 交叉熵的计算速度比 MSE 快"
+    ],
+    "correct": 1,
+    "explanation": "当使用 Sigmoid 激活 + MSE 损失时，损失对权重的梯度包含 σ'(z) 因子。当 σ(z) 接近 0 或 1（即模型非常确信但错误时），σ'(z) 接近于 0，导致梯度消失——模型'自信地犯错'时反而学不到东西。而 Softmax + 交叉熵的组合中，梯度 ∂L/∂z_i = p_i - y_i，不受激活函数饱和区的影响——当模型做出极错误的预测时（如真实类别概率接近 0），梯度仍然很大，驱动模型快速纠正错误。此外，交叉熵是衡量概率分布的'自然'度量，其凸性保证了良好的优化性质。"
+  },
+  {
+    "id": "c_nn_035",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "关于深度学习中“局部最优”问题的现代认识，以下哪个说法正确？",
+    "options": [
+      "A. 在高维参数空间中，真正的局部最小值并不常见，鞍点（Saddle Point）才是更大的挑战",
+      "B. 每个深度学习模型都必然陷入局部最小值，因此模型性能是有限的",
+      "C. 局部最优问题已被完全解决，现代优化器一定能找到全局最优",
+      "D. 网络的层数越深，局部最优的数量越少"
+    ],
+    "correct": 0,
+    "explanation": "传统的直觉认为优化算法容易陷入大量'坏'的局部最小值，但现代研究表明，在高维（参数数量可达百万甚至数十亿）空间中，真正的局部最小值非常罕见。更普遍的问题是鞍点——在某些方向上是最小，在其他方向上是最大。在鞍点处，梯度为零，但并非局部极值。高维空间中鞍点远比局部极值普遍，优化算法的瓶颈通常不是'陷入局部最优'，而是如何在近乎平坦的鞍点区域中缓慢穿行。这也是为什么 Momentum、Adam 等优化器如此重要——它们帮助加速穿越鞍点区域。"
+  },
+  {
+    "id": "c_nn_036",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "与全连接网络相比，卷积神经网络处理图像数据时为什么具有显著优势？",
+    "options": [
+      "A. CNN 使用更深层的网络结构",
+      "B. CNN 通过参数共享（权重共享）和局部连接，大幅减少参数量并利用图像的平移等变性",
+      "C. CNN 能够自动确定最优的学习率",
+      "D. CNN 不需要使用激活函数"
+    ],
+    "correct": 1,
+    "explanation": "CNN 通过两个关键设计获得优势：(1) 局部连接（Local Connectivity）：每个神经元只连接到输入的一个局部区域（感受野），而非所有像素。这符合图像的局部相关性先验——相邻像素相关性高，远处像素相关性低。(2) 参数共享（Parameter Sharing，即权重共享）：同一个卷积核在整个图像上滑动使用相同的权重。这利用了图像的平移等变性（translational equivariance）——一个特征在某位置有效，在其他位置也有效。这两个设计使 CNN 的参数量与输入图像大小解耦，避免了全连接网络中参数量随图像尺寸爆炸式增长的问题。"
+  },
+  {
+    "id": "c_nn_037",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "LSTM 中的“遗忘门（Forget Gate）”的作用是什么？",
+    "options": [
+      "A. 决定当前输入中有多少信息应该被写入记忆单元",
+      "B. 决定记忆单元中哪些旧信息应该被丢弃",
+      "C. 决定记忆单元中有多少信息应该输出到隐藏状态",
+      "D. 决定是否完全重置整个 LSTM 的状态"
+    ],
+    "correct": 1,
+    "explanation": "LSTM（长短期记忆网络）通过三个门控机制控制信息流：(1) 遗忘门（Forget Gate）f_t = σ(W_f·[h_{t-1}, x_t] + b_f)，其输出是一个 0 到 1 之间的向量，决定了上一个时刻的记忆单元 C_{t-1} 中哪些信息应该被保留（接近 1）或丢弃（接近 0），即 C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t。(2) 输入门（Input Gate）i_t 控制新候选值 C̃_t 有多少写入记忆单元。(3) 输出门（Output Gate）o_t 控制记忆单元中哪些信息输出到当前隐藏状态 h_t。遗忘门的引入是 LSTM 相比标准 RNN 能有效缓解梯度消失的关键。"
+  },
+  {
+    "id": "c_nn_038",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "为什么 LSTM 相比标准 RNN 能更好地缓解梯度消失问题？",
+    "options": [
+      "A. LSTM 使用了更简单的激活函数来避免梯度消失",
+      "B. LSTM 的记忆单元通过累加方式更新（而非乘法），允许梯度沿时间步直接传递而不被反复缩减",
+      "C. LSTM 的参数量远小于标准 RNN，因此梯度传播更稳定",
+      "D. LSTM 在每一步都随机丢弃一些梯度来防止消失"
+    ],
+    "correct": 1,
+    "explanation": "标准 RNN 的隐藏状态更新为 h_t = tanh(W·h_{t-1} + U·x_t + b)。在 BPTT 中，梯度需要连乘 Jacobian 矩阵，当其特征值小于 1 时梯度消失，大于 1 时梯度爆炸。LSTM 的关键创新在于记忆单元（Cell State）的累加式更新：C_t = f_t ⊙ C_{t-1} + i_t ⊙ C̃_t。当遗忘门 f_t ≈ 1 时，梯度可以通过 C_t → C_{t-1} 这条路径几乎无损地传递（类似于残差连接中的恒等映射），这使得 LSTM 能够在数百个时间步上保持梯度流动，有效缓解了梯度消失问题。"
+  },
+  {
+    "id": "c_nn_039",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "从集成学习（Ensemble Learning）的角度如何理解 Dropout 的正则化效果？",
+    "options": [
+      "A. Dropout 等价于对输入数据进行 Bootstrap 采样",
+      "B. Dropout 在训练中隐式地训练了指数多个共享参数的子网络，推理时对这些子网络的预测进行了近似平均",
+      "C. Dropout 在每次训练迭代中使用不同的损失函数",
+      "D. Dropout 等价于 Bagging 多个独立训练的模型"
+    ],
+    "correct": 1,
+    "explanation": "从集成学习的角度看，Dropout 是一种隐式的模型平均（Model Averaging）方法。假设网络有 n 个神经元，Dropout 在每次训练迭代中随机选择一个子网络（有 2^n 种可能的子网络），这些子网络共享未被丢弃的神经元的参数。训练完成后，推理阶段（不使用 Dropout，但缩放输出）相当于对这指数多个子网络的预测进行了几何平均（或近似算术平均）。这类似于 Bagging 的思想——通过组合多个弱模型的预测来降低方差和过拟合，但 Dropout 不需要显式训练多个模型，所有子网络共享参数，在单个训练过程中完成集成。"
+  },
+  {
+    "id": "c_nn_040",
+    "type": "concept",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "BatchNorm 在训练和推理（测试）阶段的行为有什么关键差异？",
+    "options": [
+      "A. 训练时使用整个训练集的全局均值和方差；推理时使用当前小批量的均值和方差",
+      "B. 训练时使用当前小批量的均值和方差进行归一化；推理时使用训练阶段累积的全局均值和方差（通常用移动平均估计）",
+      "C. 训练时不对输入做任何变换；推理时才进行归一化",
+      "D. 训练和推理阶段的行为完全相同"
+    ],
+    "correct": 1,
+    "explanation": "BatchNorm 在训练和推理阶段的行为有本质区别：(1) 训练阶段：使用当前 mini-batch 的均值和方差对激活值进行归一化。同时，通过指数移动平均（EMA）维护全局均值和方差的估计值（running_mean, running_var）。(2) 推理阶段：使用训练阶段累积的全局均值和方差（而非单个测试样本或 mini-batch 的统计量），因为推理时可能是单样本预测，即使有 batch 也应当保持确定的输出（不受 batch 中其他样本影响）。这个差异在实际部署中是一个常见的坑：忘记将模型切换到 eval 模式导致性能下降。"
+  },
+  {
+    "id": "p_nn_001",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现 Sigmoid 激活函数。",
+    "context": "Sigmoid 函数的公式为 σ(x) = 1 / (1 + e^(-x))。输入 x 是一个 NumPy 数组。",
+    "correct_blocks": [
+      "def sigmoid(x):",
+      "    z = np.exp(-x)",
+      "    return 1 / (1 + z)"
+    ],
+    "distractor_blocks": [
+      "    return 1 / (1 + np.exp(x))",
+      "    return np.maximum(0, x)",
+      "    return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))"
+    ],
+    "explanation": "Sigmoid 函数 σ(x) = 1/(1+e^(-x))。关键点在于指数部分是 `-x`（负号），而非 `x`。先计算 z = np.exp(-x)（对数组每个元素分别计算 e 的 -x 次方），再计算 1/(1+z) 得到最终结果。迷惑块 `1/(1+np.exp(x))` 缺少负号，输出的是 1-σ(x)（仅在标量输入时成立）。`np.maximum(0, x)` 是 ReLU 的实现。第三个迷惑块是 tanh 的公式。"
+  },
+  {
+    "id": "p_nn_002",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现 ReLU 激活函数。",
+    "context": "ReLU 函数的定义为 f(x) = max(0, x)。输入 x 是一个 NumPy 数组。",
+    "correct_blocks": [
+      "def relu(x):",
+      "    out = np.maximum(0, x)",
+      "    return out"
+    ],
+    "distractor_blocks": [
+      "    return np.maximum(0.01 * x, x)",
+      "    return 1 / (1 + np.exp(-x))",
+      "    return np.where(x > 0, 1, 0)"
+    ],
+    "explanation": "ReLU 的正确实现是 `np.maximum(0, x)`，它对数组中每个元素返回其与 0 之间的较大值。先计算 out = np.maximum(0, x)，再返回 out。迷惑块 `np.maximum(0.01 * x, x)` 是 LeakyReLU（α=0.01）的实现，对于负输入返回 0.01x 而非 0。`1/(1+np.exp(-x))` 是 Sigmoid 的实现。`np.where(x > 0, 1, 0)` 返回的是 ReLU 的导数（阶梯函数），而非 ReLU 本身——ReLU 在 x>0 时输出的是 x 本身，而不是 1。"
+  },
+  {
+    "id": "p_nn_003",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现均方误差（MSE）损失函数。",
+    "context": "MSE 公式为 L = (1/n) * Σ(y_pred - y_true)²。y_pred 和 y_true 都是形状为 (n,) 的 NumPy 数组。",
+    "correct_blocks": [
+      "def mse_loss(y_pred, y_true):",
+      "    diff = y_pred - y_true",
+      "    sq = diff ** 2",
+      "    return np.mean(sq)"
+    ],
+    "distractor_blocks": [
+      "    return np.mean(y_pred - y_true)",
+      "    return -np.mean(y_true * np.log(y_pred + 1e-8))",
+      "    return np.sum(np.abs(y_pred - y_true))"
+    ],
+    "explanation": "MSE 的正确实现分为三步：(1) diff = y_pred - y_true 计算差值；(2) sq = diff ** 2 计算平方；(3) np.mean(sq) 取均值。注意必须使用 ** 2 而非 abs()——平方操作不可省略。迷惑块 `np.mean(y_pred - y_true)` 缺少平方，正负误差会相互抵消。`-np.mean(y_true * np.log(y_pred + 1e-8))` 是交叉熵损失（加 1e-8 防止 log(0)）。`np.sum(np.abs(y_pred - y_true))` 是 MAE 的求和版本。"
+  },
+  {
+    "id": "p_nn_004",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，实现单层神经网络的前向传播（线性变换后接 Sigmoid 激活）。",
+    "context": "输入 X 的形状为 (n_samples, n_features)，权重 W 的形状为 (n_features, n_output)，偏置 b 的形状为 (n_output,)。",
+    "correct_blocks": [
+      "def forward(X, W, b):",
+      "    z = X @ W + b",
+      "    a = sigmoid(z)",
+      "    return a"
+    ],
+    "distractor_blocks": [
+      "    a = sigmoid(X) @ W + b",
+      "    z = X + W + b",
+      "    return relu(z)"
+    ],
+    "explanation": "单层前向传播的正确流程为：(1) 线性变换 z = X @ W + b，使用矩阵乘法 `@` 计算加权和，然后加上偏置；(2) 激活函数 a = sigmoid(z)，对线性输出进行非线性变换。迷惑块 `sigmoid(X) @ W + b` 错误地对输入先做激活再做线性变换（顺序颠倒）。`X + W + b` 使用元素加法而非矩阵乘法，忽略了输入与权重之间的加权求和关系。`relu(z)` 使用了错误的激活函数（题目明确要求 Sigmoid）。"
+  },
+  {
+    "id": "p_nn_005",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现基本的梯度下降参数更新步骤。",
+    "context": "参数 W、b 已有计算好的梯度 dW、db，学习率为 lr。",
+    "correct_blocks": [
+      "def update(W, b, dW, db, lr):",
+      "    W = W - lr * dW",
+      "    b = b - lr * db",
+      "    return W, b"
+    ],
+    "distractor_blocks": [
+      "    W = W + lr * dW",
+      "    W = W - lr + dW",
+      "    b = b * lr - db"
+    ],
+    "explanation": "梯度下降的更新公式是 θ = θ - η * ∇L(θ)，即沿着梯度的反方向移动一步。所以 `W = W - lr * dW` 是正确的。迷惑块 `W + lr * dW` 沿梯度方向更新（梯度上升），会导致损失增大。`W - lr + dW` 将学习率从参数更新中分离，且学习率的作用方式与标准公式不符。`b * lr - db` 将偏置乘以学习率，而非用学习率缩放梯度。"
+  },
+  {
+    "id": "p_nn_006",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 PyTorch 定义一个简单的单层线性网络（全连接层）。",
+    "context": "输入特征数为 input_dim，输出特征数为 output_dim。使用 PyTorch 的 nn.Module。",
+    "correct_blocks": [
+      "class SimpleNet(nn.Module):",
+      "    def __init__(self, input_dim, output_dim):",
+      "        super().__init__()",
+      "        self.fc = nn.Linear(input_dim, output_dim)",
+      "    def forward(self, x):",
+      "        return self.fc(x)"
+    ],
+    "distractor_blocks": [
+      "        self.fc = nn.Conv2d(input_dim, output_dim, 1)",
+      "    def forward(self, x):",
+      "        return F.relu(self.fc(x))"
+    ],
+    "explanation": "在 PyTorch 中定义网络的标准做法是：(1) 继承 nn.Module；(2) 在 __init__ 中定义层（如 nn.Linear）；(3) 在 forward 中指定前向传播逻辑。这里只需要单层线性层，不需要激活函数（题目未要求激活函数）。迷惑块 `nn.Conv2d` 是卷积层（用于 2D 图像），不适合全连接任务。`F.relu(self.fc(x))` 额外添加了 ReLU 激活，题目要求的是单层网络（仅线性变换）。"
+  },
+  {
+    "id": "p_nn_007",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 PyTorch 的 nn.Sequential 构建一个两层 MLP（Linear -> ReLU -> Linear）。",
+    "context": "输入维度 input_dim，隐藏层维度 hidden_dim，输出维度 output_dim。",
+    "correct_blocks": [
+      "model = nn.Sequential(",
+      "    nn.Linear(input_dim, hidden_dim),",
+      "    nn.ReLU(),",
+      "    nn.Linear(hidden_dim, output_dim)",
+      ")"
+    ],
+    "distractor_blocks": [
+      "    nn.Sigmoid(),",
+      "    nn.Linear(output_dim, hidden_dim),",
+      "    nn.Dropout(0.5)"
+    ],
+    "explanation": "nn.Sequential 按顺序组合网络层。题目要求 Linear -> ReLU -> Linear 的顺序：(1) 第一层：从 input_dim 映射到 hidden_dim；(2) ReLU 激活函数引入非线性；(3) 第二层：从 hidden_dim 映射到 output_dim。注意顺序：如果 ReLU 在最后，则输出全为正数（不适合某些任务）。迷惑块 `nn.Sigmoid()` 替换了 ReLU。`nn.Linear(output_dim, hidden_dim)` 维度顺序颠倒（应该是 hidden_dim -> output_dim）。`nn.Dropout(0.5)` 不应出现在此处（题目未要求）。"
+  },
+  {
+    "id": "p_nn_008",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，构建一个基本的 PyTorch 训练循环的核心步骤。",
+    "context": "使用模型 model、优化器 optimizer 和损失函数 criterion。dataloader 是一个可迭代的数据加载器。",
+    "correct_blocks": [
+      "for inputs, targets in dataloader:",
+      "    optimizer.zero_grad()",
+      "    outputs = model(inputs)",
+      "    loss = criterion(outputs, targets)",
+      "    loss.backward()",
+      "    optimizer.step()"
+    ],
+    "distractor_blocks": [
+      "    optimizer.step()  # 放在 backward 之前",
+      "    loss = criterion(inputs, targets)",
+      "    model.zero_grad()"
+    ],
+    "explanation": "PyTorch 训练循环的标准步骤为：(1) optimizer.zero_grad() 清空上一步的梯度；(2) outputs = model(inputs) 前向传播计算预测值；(3) loss = criterion(outputs, targets) 计算损失；(4) loss.backward() 反向传播计算梯度；(5) optimizer.step() 根据梯度更新参数。顺序至关重要：如果 step() 在 backward() 之前，则使用旧梯度（或零梯度）更新参数；如果 zero_grad() 在 backward() 之后，刚计算的梯度会被清零。损失函数应接收 model 输出和真实标签，而非原始输入。"
+  },
+  {
+    "id": "p_nn_009",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现 Softmax 函数。",
+    "context": "Softmax 公式为 p_i = exp(z_i) / Σ_j exp(z_j)。输入 z 是一个形状为 (n_samples, n_classes) 的 NumPy 数组。实现需要包含数值稳定性处理（减去最大值）。",
+    "correct_blocks": [
+      "def softmax(z):",
+      "    exp_z = np.exp(z - np.max(z, axis=1, keepdims=True))",
+      "    return exp_z / np.sum(exp_z, axis=1, keepdims=True)"
+    ],
+    "distractor_blocks": [
+      "    exp_z = np.exp(z)",
+      "    return exp_z / np.max(exp_z, axis=1, keepdims=True)",
+      "    return z / np.sum(z, axis=1, keepdims=True)"
+    ],
+    "explanation": "Softmax 的正确实现需要注意数值稳定性。直接计算 np.exp(z) 在 z 值较大时可能溢出。标准的稳定做法是：先减去每行的最大值（z - max），得到一个 ≤0 的矩阵，再计算 exp 和归一化。这个操作不改变 Softmax 的结果（因为分子和分母都乘以了相同的因子），但避免了数值溢出。迷惑块 `np.exp(z)` 缺少最大值的减法，可能溢出。`exp_z / np.max(exp_z)` 用最大值归一化而非求和，结果和不等于 1。`z / np.sum(z)` 缺少 exp，输出不是概率分布（可能有负数且和不为 1）。"
+  },
+  {
+    "id": "p_nn_010",
+    "type": "codepuzzle",
+    "difficulty": "easy",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，正确地在训练和评估模式下使用 Dropout 层。",
+    "context": "模型 model 包含 Dropout 层。训练时和评估时的行为不同。",
+    "correct_blocks": [
+      "def train_step(model, x):",
+      "    model.train()",
+      "    return model(x)",
+      "",
+      "def eval_step(model, x):",
+      "    model.eval()",
+      "    with torch.no_grad():",
+      "        return model(x)"
+    ],
+    "distractor_blocks": [
+      "def eval_step(model, x):",
+      "    model.train()",
+      "    return model(x)"
+    ],
+    "explanation": "Dropout 在训练和评估时的行为不同：训练时随机丢弃神经元，评估时所有神经元都激活但输出被缩放。因此：(1) 训练时调用 `model.train()` 启用 Dropout；(2) 评估时调用 `model.eval()` 禁用 Dropout（以及 BatchNorm 切换为推理模式）；(3) 评估时使用 `torch.no_grad()` 上下文管理器禁用梯度计算，节省内存和加速计算。常见错误是评估时忘记调用 `model.eval()`，导致 Dropout 仍然随机丢弃神经元，预测结果不稳定且不准确。"
+  },
+  {
+    "id": "p_nn_011",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现两层神经网络的前向传播（隐藏层 ReLU + 输出层 Sigmoid）。",
+    "context": "输入 X (n_samples, n_features)，W1 (n_features, h_dim)，b1 (h_dim,)，W2 (h_dim, n_output)，b2 (n_output,)。",
+    "correct_blocks": [
+      "def forward_two_layer(X, W1, b1, W2, b2):",
+      "    z1 = X @ W1 + b1",
+      "    a1 = np.maximum(0, z1)",
+      "    z2 = a1 @ W2 + b2",
+      "    a2 = 1 / (1 + np.exp(-z2))",
+      "    return a2"
+    ],
+    "distractor_blocks": [
+      "    a1 = 1 / (1 + np.exp(-z1))",
+      "    a2 = np.maximum(0, z2)",
+      "    a1 = np.maximum(0, X) @ W1 + b1"
+    ],
+    "explanation": "两层网络的正向传播顺序为：(1) 第一层线性变换 z1 = X @ W1 + b1；(2) 隐藏层激活 a1 = ReLU(z1) = np.maximum(0, z1)；(3) 第二层线性变换 z2 = a1 @ W2 + b2；(4) 输出层激活 a2 = Sigmoid(z2) = 1/(1+np.exp(-z2))。注意 ReLU 应在隐藏层，Sigmoid 在输出层（用于二分类输出概率）。迷惑块 `a1 = sigmoid(z1)` 在隐藏层错误使用了 Sigmoid 而非 ReLU。`a2 = ReLU(z2)` 在输出层错误使用了 ReLU 而非 Sigmoid。`np.maximum(0, X) @ W1 + b1` 先对输入做 ReLU 再进行线性变换，顺序颠倒。"
+  },
+  {
+    "id": "p_nn_012",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现 Sigmoid 函数的导数（反向传播中的局部梯度）。",
+    "context": "Sigmoid 的导数为 σ'(x) = σ(x) * (1 - σ(x))。输入 sigmoid_output 是已经计算好的 σ(x)。",
+    "correct_blocks": [
+      "def sigmoid_backward(sigmoid_output, upstream_grad):",
+      "    local_grad = sigmoid_output * (1 - sigmoid_output)",
+      "    return upstream_grad * local_grad"
+    ],
+    "distractor_blocks": [
+      "    local_grad = sigmoid_output * (1 + sigmoid_output)",
+      "    local_grad = sigmoid_output ** 2",
+      "    return upstream_grad + local_grad"
+    ],
+    "explanation": "反向传播中，Sigmoid 层的局部梯度是 σ(x)*(1-σ(x))，即用前向传播时保存的输出值直接计算导数（这样效率更高，不需要重新计算指数）。然后按照链式法则，将上游梯度与局部梯度相乘：upstream_grad * local_grad。迷惑块 `σ*(1+σ)` 导数公式错误。`σ^2` 不是 Sigmoid 的导数。`upstream_grad + local_grad` 将乘法错误地写为加法——链式法则是连乘而非连加。"
+  },
+  {
+    "id": "p_nn_013",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现多分类交叉熵损失函数。",
+    "context": "y_true 是 one-hot 编码的真实标签，y_pred 是 Softmax 后的预测概率。两者形状均为 (n_samples, n_classes)。需要加入 1e-8 防止 log(0)。",
+    "correct_blocks": [
+      "def cross_entropy_loss(y_pred, y_true):",
+      "    n = y_pred.shape[0]",
+      "    loss = -np.sum(y_true * np.log(y_pred + 1e-8)) / n",
+      "    return loss"
+    ],
+    "distractor_blocks": [
+      "    loss = -np.sum(y_true * np.log(y_pred))",
+      "    loss = -np.sum((1 - y_true) * np.log(1 - y_pred)) / n",
+      "    loss = np.sum((y_pred - y_true) ** 2) / n"
+    ],
+    "explanation": "多分类交叉熵的公式为 L = -(1/n) * Σ y_true * log(y_pred)。关键点：(1) 使用 y_true（one-hot）作为 mask，只取正确类别的 log 概率；(2) +1e-8 防止 y_pred 为 0 时 log(0) = -inf 的数值问题；(3) 除以样本数 n 取均值。注意安全写法 np.sum(...)/n 而非 np.mean(...)，因为 `*` 是逐元素乘。迷惑块 `-(1-y_true)*log(1-y_pred)` 是二分类交叉熵（二元形式的第二部分），不适用于多分类。`(y_pred - y_true)²` 是 MSE 损失，不适用于分类。缺少 1e-8 的版本可能因 log(0) 而崩溃。"
+  },
+  {
+    "id": "p_nn_014",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现小批量梯度下降（Mini-batch Gradient Descent）的训练循环。",
+    "context": "X_train 是 (n_samples, n_features) 数组，y_train 是 (n_samples,) 数组。参数 W 已初始化。",
+    "correct_blocks": [
+      "for epoch in range(n_epochs):",
+      "    for i in range(0, n_samples, batch_size):",
+      "        X_batch = X_train[i:i+batch_size]",
+      "        y_batch = y_train[i:i+batch_size]",
+      "        y_pred = forward(X_batch, W)",
+      "        dW = compute_grad(X_batch, y_batch, y_pred)",
+      "        W = W - lr * dW"
+    ],
+    "distractor_blocks": [
+      "        dW = compute_grad(X_train, y_train, y_pred)",
+      "        W = W + lr * dW",
+      "        X_batch = X_train[0:batch_size]"
+    ],
+    "explanation": "小批量梯度下降的核心是每个 epoch 内将数据分成若干小批量（batch），每次对一个 batch 计算梯度并更新参数。关键步骤：(1) 外层 epoch 循环遍历所有数据多遍；(2) 内层用 `range(0, n_samples, batch_size)` 按 batch_size 步进；(3) 切片取当前 batch；(4) 用小批量数据计算前向传播和梯度；(5) W = W - lr * dW 梯度下降更新。`X_train[0:batch_size]` 始终取相同的前 batch_size 个样本（每次不滑动窗口）。`compute_grad(X_train, y_train, ...)` 错误地使用全量数据计算梯度，失去了 mini-batch 的优势。`W + lr * dW` 是梯度上升。"
+  },
+  {
+    "id": "p_nn_015",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，在 PyTorch 中构建一个包含 Linear、BatchNorm、ReLU 的模块。",
+    "context": "输入特征数 in_features，输出特征数 out_features。BatchNorm1d 用于一维数据。",
+    "correct_blocks": [
+      "class BNBlock(nn.Module):",
+      "    def __init__(self, in_features, out_features):",
+      "        super().__init__()",
+      "        self.linear = nn.Linear(in_features, out_features)",
+      "        self.bn = nn.BatchNorm1d(out_features)",
+      "    def forward(self, x):",
+      "        return F.relu(self.bn(self.linear(x)))"
+    ],
+    "distractor_blocks": [
+      "        self.bn = nn.BatchNorm2d(out_features)",
+      "    def forward(self, x):",
+      "        return F.relu(self.linear(self.bn(x)))"
+    ],
+    "explanation": "BatchNorm 的标准位置是线性层（或卷积层）之后、激活函数之前。流程为：Linear -> BatchNorm -> ReLU。顺序很重要：(1) 先在 nn.Module.__init__ 中定义层；(2) forward 中 self.linear(x) 先做线性变换；(3) self.bn(...) 对线性输出做批归一化（使其均值为 0 方差为 1）；(4) F.relu(...) 应用激活函数。注意 BatchNorm1d 用于全连接层的输出，BatchNorm2d 用于 CNN 的特征图（四维张量）。如果 BatchNorm 在 Linear 之前，批归一化对原始输入做（虽然有时也这样做），但在 Linear 之后更标准。"
+  },
+  {
+    "id": "p_nn_016",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 PyTorch 构建一个简单的 CNN：Conv2d -> ReLU -> MaxPool2d。",
+    "context": "输入通道数 in_channels，输出通道数 out_channels，卷积核尺寸 3×3，池化尺寸 2×2。",
+    "correct_blocks": [
+      "class SimpleCNN(nn.Module):",
+      "    def __init__(self, in_channels, out_channels):",
+      "        super().__init__()",
+      "        self.conv = nn.Conv2d(in_channels, out_channels, 3, padding=1)",
+      "        self.pool = nn.MaxPool2d(2, 2)",
+      "    def forward(self, x):",
+      "        x = self.conv(x)",
+      "        x = F.relu(x)",
+      "        x = self.pool(x)",
+      "        return x"
+    ],
+    "distractor_blocks": [
+      "        self.conv = nn.Conv2d(in_channels, out_channels, 5)",
+      "        self.pool = nn.MaxPool2d(3, 3)",
+      "    def forward(self, x):",
+      "        x = self.pool(x)  # 池化在卷积之前",
+      "        x = self.conv(x)",
+      "        x = F.relu(x)"
+    ],
+    "explanation": "标准 CNN 模块的处理顺序为：卷积 -> 激活 -> 池化。(1) nn.Conv2d(in_channels, out_channels, 3, padding=1) 定义 3×3 卷积，padding=1 保持特征图尺寸不变；(2) F.relu 做非线性激活；(3) nn.MaxPool2d(2, 2) 做 2×2 池化，将尺寸减半。注意 padding=1 对于 3×3 卷积保持尺寸是很重要的（否则尺寸会缩小 2）。如果池化在卷积之前，会先丢失信息再提取特征，不合理。题目指定的卷积核是 3×3，padding=1 不算在代码块中但符合常规。"
+  },
+  {
+    "id": "p_nn_017",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 PyTorch 构建一个简单的 RNN 层（使用 nn.RNN），然后执行前向传播。",
+    "context": "输入 x 的形状为 (seq_len, batch_size, input_size)。hidden_size 是隐藏层维度。nn.RNN 返回 output 和 hidden。",
+    "correct_blocks": [
+      "class SimpleRNN(nn.Module):",
+      "    def __init__(self, input_size, hidden_size):",
+      "        super().__init__()",
+      "        self.rnn = nn.RNN(input_size, hidden_size, batch_first=False)",
+      "    def forward(self, x):",
+      "        output, hidden = self.rnn(x)",
+      "        return output, hidden"
+    ],
+    "distractor_blocks": [
+      "        self.rnn = nn.RNN(hidden_size, input_size, batch_first=False)",
+      "        self.rnn = nn.LSTM(input_size, hidden_size)",
+      "    def forward(self, x):",
+      "        return self.rnn(x)[0]  # 忽略 hidden 状态"
+    ],
+    "explanation": "PyTorch 的 nn.RNN 接受参数 (input_size, hidden_size)，前向传播返回 (output, hidden)。题目明确要求使用 nn.RNN（不是 LSTM）。关键点：(1) nn.RNN 参数顺序是 input_size 在前，hidden_size 在后；(2) batch_first=False（默认）表示输入形状为 (seq_len, batch, features)；(3) output 包含所有时间步的隐藏状态，hidden 是最后一个时间步的隐藏状态。迷惑块中将 input_size 和 hidden_size 位置颠倒会导致维度不匹配。使用 nn.LSTM 不对，因为题目明确要求 RNN。"
+  },
+  {
+    "id": "p_nn_018",
+    "type": "codepuzzle",
+    "difficulty": "medium",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现带有动量（Momentum）的梯度下降参数更新。",
+    "context": "参数 W，梯度 dW，学习率 lr，动量系数 momentum（如 0.9）。velocity 是上次更新的速度。",
+    "correct_blocks": [
+      "def momentum_update(W, dW, velocity, lr, momentum):",
+      "    velocity = momentum * velocity - lr * dW",
+      "    W = W + velocity",
+      "    return W, velocity"
+    ],
+    "distractor_blocks": [
+      "    velocity = momentum * velocity + lr * dW",
+      "    W = W - velocity",
+      "    velocity = lr * dW + momentum * W",
+      "    W = W - momentum * dW"
+    ],
+    "explanation": "Momentum（动量）更新公式为：v = momentum * v - lr * grad（累积速度），W = W + v（应用速度更新）。速度 v 相当于过去梯度的指数移动平均：momentum * velocity 保留历史梯度方向，- lr * dW 加入当前梯度。关键在于：(1) 速度更新时累积的是负梯度方向（-lr*dW）；(2) 参数更新是 W = W + velocity（因为 velocity 中已包含负号）。W + lr * dW 是在做梯度上升。W - momentum * dW 缺少速度累积，只是带缩放的 SGD。velocity = lr * dW + momentum * W 将参数混入了速度计算，完全错误。"
+  },
+  {
+    "id": "p_nn_019",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，实现两层神经网络（隐藏层Sigmoid，输出层Sigmoid）的反向传播，计算参数梯度。",
+    "context": "已知：X, W1, b1, W2, b2；前向传播的中间值 z1, a1, z2, a2；输出层损失对 a2 的梯度 dA2。Sigmoid 的导数为 σ(x)*(1-σ(x))。",
+    "correct_blocks": [
+      "def backward(X, z1, a1, z2, a2, W2, dA2):",
+      "    dZ2 = dA2 * a2 * (1 - a2)",
+      "    dW2 = a1.T @ dZ2",
+      "    db2 = np.sum(dZ2, axis=0)",
+      "    dA1 = dZ2 @ W2.T",
+      "    dZ1 = dA1 * a1 * (1 - a1)",
+      "    dW1 = X.T @ dZ1",
+      "    db1 = np.sum(dZ1, axis=0)",
+      "    return dW1, db1, dW2, db2"
+    ],
+    "distractor_blocks": [
+      "    dZ2 = dA2 * z2 * (1 - z2)",
+      "    dW2 = dZ2 @ a1.T",
+      "    dA1 = W2.T @ dZ2",
+      "    dZ1 = dA1 * z1 * (1 - z1)"
+    ],
+    "explanation": "两层 Sigmoid 网络的反向传播要求严格按链式法则计算。核心步骤：(1) dZ2 = dA2 * a2*(1-a2)，用 a2（Sigmoid 输出）计算 Sigmoid 的局部导数；(2) dW2 = a1.T @ dZ2，权重梯度 = 该层输入的转置 × 该层梯度；(3) db2 = sum(dZ2, axis=0)，偏置梯度 = 对 dZ2 按样本维度求和；(4) dA1 = dZ2 @ W2.T，将梯度通过权重矩阵反向传播到上一层；(5) dZ1 = dA1 * a1*(1-a1)，隐层 Sigmoid 的梯度；(6) dW1 = X.T @ dZ1, db1 = sum(dZ1)。常见错误：使用 z 而非 a 计算 Sigmoid 导数（dZ2 = dA2 * z2*(1-z2)），虽然结果一样因为 a2=Sigmoid(z2)，但通常用 a2 因为已经缓存了。dW2 的维度计算错误（a1.T @ dZ2 vs dZ2 @ a1.T）会导致形状不匹配。W2.T @ dZ2 中矩阵乘法顺序错误。"
+  },
+  {
+    "id": "p_nn_020",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现 Adam 优化器的参数更新步骤。",
+    "context": "参数 w，梯度 dw，一阶矩 m，二阶矩 v，时间步 t。超参数：lr（学习率），beta1=0.9，beta2=0.999，eps=1e-8。",
+    "correct_blocks": [
+      "def adam_update(w, dw, m, v, t, lr, beta1, beta2, eps):",
+      "    m = beta1 * m + (1 - beta1) * dw",
+      "    v = beta2 * v + (1 - beta2) * (dw ** 2)",
+      "    m_hat = m / (1 - beta1 ** t)",
+      "    v_hat = v / (1 - beta2 ** t)",
+      "    w = w - lr * m_hat / (np.sqrt(v_hat) + eps)",
+      "    return w, m, v"
+    ],
+    "distractor_blocks": [
+      "    m = beta1 * m + (1 - beta1) * dw ** 2",
+      "    v = beta2 * v + (1 - beta2) * dw",
+      "    w = w - lr * m / (np.sqrt(v) + eps)",
+      "    m_hat = m / (1 - beta1 ** (t+1))"
+    ],
+    "explanation": "Adam 更新分为几个步骤：(1) 更新一阶矩（动量）m = β₁*m + (1-β₁)*dw；(2) 更新二阶矩（RMSprop 部分）v = β₂*v + (1-β₂)*dw²；(3) 偏差校正 m_hat = m/(1-β₁^t), v_hat = v/(1-β₂^t)，解决初始时刻估计偏向 0 的问题；(4) 参数更新 w = w - lr * m_hat/(sqrt(v_hat) + ε)。常见错误：(1) m 和 v 的公式混淆——m 用 dw（一阶），v 用 dw²（二阶）；(2) 忘记偏差校正直接使用 m 和 v；(3) 偏差校正公式中指数用 t+1 而非 t（Adam 论文中使用 t，从 1 开始计数）。"
+  },
+  {
+    "id": "p_nn_021",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现一个简单计算图中链式法则的反向传播：y = w*x + b, L = (y - y_true)²。",
+    "context": "这是一个简化版的计算图。x, w, b, y_true 已知，需要计算 dL/dw 和 dL/db。",
+    "correct_blocks": [
+      "def compute_grads(x, w, b, y_true):",
+      "    y = w * x + b",
+      "    dL_dy = 2 * (y - y_true)",
+      "    dL_dw = dL_dy * x",
+      "    dL_db = dL_dy * 1",
+      "    return dL_dw, dL_db"
+    ],
+    "distractor_blocks": [
+      "    dL_dy = y - y_true",
+      "    dL_dw = dL_dy + x",
+      "    dL_db = dL_dy + 1",
+      "    dL_dw = dL_dy / x"
+    ],
+    "explanation": "按照链式法则推导：L = (y - y_true)²，y = wx + b。(1) dL/dy = 2(y - y_true)，来自 (·)² 的导数 2(·)；(2) dL/dw = dL/dy * ∂y/∂w = dL/dy * x，因为 ∂(wx+b)/∂w = x；(3) dL/db = dL/dy * ∂y/∂b = dL/dy * 1，因为 ∂(wx+b)/∂b = 1。常见错误：(1) 忘记 MSE 的系数 2（虽然可以吸收进学习率，但严格推导应包含）；(2) 链式法则用加法(+)代替乘法(*)；(3) dL/dw = dL/dy/x（除法错误）；(4) 在计算图中反向传播时，加法节点的上游梯度直接传回（乘以 1），乘法节点的上游梯度乘以对另一个输入的值。"
+  },
+  {
+    "id": "p_nn_022",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现 LeakyReLU 激活函数及其导数。",
+    "context": "LeakyReLU: f(x) = x if x>0 else α*x，其中 α 是一个小的正数（如 0.01）。导数：f'(x) = 1 if x>0 else α。",
+    "correct_blocks": [
+      "def leaky_relu(x, alpha=0.01):",
+      "    return np.where(x > 0, x, alpha * x)",
+      "",
+      "def leaky_relu_backward(x, upstream_grad, alpha=0.01):",
+      "    local_grad = np.where(x > 0, 1.0, alpha)",
+      "    return upstream_grad * local_grad"
+    ],
+    "distractor_blocks": [
+      "    return np.maximum(alpha, x)",
+      "    local_grad = np.where(x > 0, alpha, 1.0)",
+      "    local_grad = np.where(x > 0, x, alpha)"
+    ],
+    "explanation": "LeakyReLU 的前向传播使用 np.where 条件选择：x > 0 时输出 x，否则输出 α*x。导数同理：x > 0 时导数为 1，否则导数为 α（通常 0.01）。这解决了标准 ReLU 的“Dying ReLU”问题（负半区梯度为 0，神经元永久失活）。迷惑块 `np.maximum(alpha, x)` 在 x 在 (0, α) 之间时输出 α，不符合 LeakyReLU 的定义。导数的 where 条件中 1 和 α 位置颠倒会导致梯度严重错误。where 中第三个参数用 x 而非 alpha 会给出错误的导数值。"
+  },
+  {
+    "id": "p_nn_023",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，实现 LSTM 单元在一个时间步上的核心计算（不包括门控的偏置）。",
+    "context": "输入 x_t (batch, input_size)，上一时刻隐藏状态 h_prev (batch, hidden_size)，上一时刻记忆单元 c_prev (batch, hidden_size)。W 和 U 分别为输入权重和循环权重，已按四个门拼接。",
+    "correct_blocks": [
+      "def lstm_step(x_t, h_prev, c_prev, W, U):",
+      "    gates = x_t @ W + h_prev @ U",
+      "    i, f, o, g = np.split(sigmoid(gates[:, :3*h]), [h, 2*h, 3*h], axis=1)",
+      "    f = sigmoid(f)",
+      "    c_t = f * c_prev + i * np.tanh(g)",
+      "    o = sigmoid(o)",
+      "    h_t = o * np.tanh(c_t)",
+      "    return h_t, c_t"
+    ],
+    "distractor_blocks": [
+      "    c_t = i * c_prev + f * np.tanh(g)",
+      "    c_t = f * c_prev + o * np.tanh(g)",
+      "    h_t = i * np.tanh(c_t)"
+    ],
+    "explanation": "LSTM 单个时间步的核心计算：(1) 将所有门控的线性变换合并计算 gates = x_t@W + h_prev@U（W 和 U 各自为 4*hidden_size 的宽度）；(2) 拆分出门控：输入门 i、遗忘门 f、输出门 o 经过 sigmoid（输出 0~1），候选记忆 g 经过 tanh（输出 -1~1）；(3) 记忆单元更新 c_t = f*c_prev + i*g（遗忘门控制旧记忆保留多少，输入门控制新记忆加入多少）；(4) 隐藏状态 h_t = o*tanh(c_t)（输出门控制记忆单元中有多少信息输出）。关键公式：c_t 的正确组合为遗忘门 × 旧记忆 + 输入门 × 新候选。如果交换 f 和 i 的位置（i*c_prev + f*g），遗忘和输入门的语义就反了。使用 o 替代 i 来控制候选记忆写入，混淆了输出门和输入门的功能。"
+  },
+  {
+    "id": "p_nn_024",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现批归一化（BatchNorm）的训练阶段前向传播。",
+    "context": "输入 x 形状为 (batch_size, features)。gamma 和 beta 是可学习的缩放和偏移参数，eps 防止除零。",
+    "correct_blocks": [
+      "def batchnorm_forward(x, gamma, beta, eps=1e-5):",
+      "    mean = np.mean(x, axis=0, keepdims=True)",
+      "    var = np.var(x, axis=0, keepdims=True)",
+      "    x_hat = (x - mean) / np.sqrt(var + eps)",
+      "    out = gamma * x_hat + beta",
+      "    return out, x_hat, mean, var"
+    ],
+    "distractor_blocks": [
+      "    mean = np.mean(x, axis=1, keepdims=True)",
+      "    x_hat = (x - mean) / (var + eps)",
+      "    out = gamma * x_hat",
+      "    var = np.std(x, axis=0, keepdims=True)"
+    ],
+    "explanation": "BatchNorm 训练阶段的前向传播步骤：(1) 沿 batch 维度（axis=0）计算均值 mean 和方差 var；(2) 标准化 x_hat = (x - mean)/sqrt(var + eps)，eps 防止除零（注意是 sqrt 不是直接除方差）；(3) 仿射变换 out = gamma * x_hat + beta，gamma 和 beta 是可学习参数，恢复网络的表达能力。注意 axis=0 正确（对每个特征在所有样本上计算统计量）；axis=1 错误（对每个样本在所有特征上计算，失去了 BatchNorm 的意义）。缺少 sqrt 会导致缩放不一致。忘记加 beta 会限制 bn 层的表达能力。返回缓存值 x_hat, mean, var 是为了反向传播使用。"
+  },
+  {
+    "id": "p_nn_025",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 实现带 Dropout 的训练阶段前向传播（Inverted Dropout）。",
+    "context": "输入 x 形状为任意。dropout_rate 是丢弃概率 p（如 0.5）。Inverted Dropout 在训练时除以 (1-p) 来缩放。",
+    "correct_blocks": [
+      "def dropout_forward(x, dropout_rate, training=True):",
+      "    if training:",
+      "        mask = (np.random.rand(*x.shape) > dropout_rate) / (1 - dropout_rate)",
+      "        return x * mask",
+      "    else:",
+      "        return x"
+    ],
+    "distractor_blocks": [
+      "        mask = (np.random.rand(*x.shape) > dropout_rate)",
+      "        return x * mask * (1 - dropout_rate)",
+      "        mask = np.random.rand(*x.shape) < dropout_rate",
+      "        return x + mask"
+    ],
+    "explanation": "Inverted Dropout 的实现步骤：(1) 仅在 training=True 时执行 Dropout；(2) 生成随机掩码 mask：每个元素生成 [0,1) 随机数，> dropout_rate 的保留（设为 1），其余丢弃（设为 0）；(3) 关键步骤：mask 除以 (1 - dropout_rate)，使激活值的期望保持不变。这避免了推理时还需要手动缩放输出——推理时直接返回 x 即可。(4) 应用 mask：x * mask。常见错误：(1) 忘记除以 (1-p)（非 inverted 版本），导致训练和推理输出期望不一致；(2) 在推理阶段也做 Dropout；(3) 掩码条件反了（< 而非 >）；(4) 将 mask 加而非乘到 x 上。"
+  },
+  {
+    "id": "p_nn_026",
+    "type": "codepuzzle",
+    "difficulty": "hard",
+    "topic": "神经网络基础",
+    "question": "请排列代码块，使用 NumPy 完成一个完整的单隐藏层神经网络训练步骤（前向+反向+更新）。",
+    "context": "网络：Linear -> ReLU -> Linear（回归任务，MSE 损失）。X(N,D), y(N,1)。W1(D,H), b1(H,), W2(H,1), b2(1,)。学习率 lr。",
+    "correct_blocks": [
+      "def train_step(X, y, W1, b1, W2, b2, lr):",
+      "    z1 = X @ W1 + b1",
+      "    a1 = np.maximum(0, z1)",
+      "    z2 = a1 @ W2 + b2",
+      "    y_pred = z2",
+      "    loss = np.mean((y_pred - y) ** 2)",
+      "    dz2 = 2 * (y_pred - y) / X.shape[0]",
+      "    dW2 = a1.T @ dz2",
+      "    db2 = np.sum(dz2, axis=0)",
+      "    da1 = dz2 @ W2.T",
+      "    dz1 = da1 * (z1 > 0)",
+      "    dW1 = X.T @ dz1",
+      "    db1 = np.sum(dz1, axis=0)",
+      "    W2 -= lr * dW2; b2 -= lr * db2",
+      "    W1 -= lr * dW1; b1 -= lr * db1",
+      "    return W1, b1, W2, b2, loss"
+    ],
+    "distractor_blocks": [
+      "    dz2 = (y_pred - y) / X.shape[0]",
+      "    dz1 = da1 * (z1 > 0) * z1",
+      "    dW2 = dz2 @ a1.T",
+      "    da1 = W2.T @ dz2"
+    ],
+    "explanation": "完整训练步骤结合了前向传播、反向传播和参数更新。(1) 前向传播：z1 = X@W1+b1, a1 = ReLU(z1), z2 = a1@W2+b2（输出层无激活函数，因为回归任务）；(2) MSE 损失；(3) 反向传播：dz2 = 2*(y_pred-y)/N（MSE 导数含系数 2）；dW2 = a1.T@dz2（正确形状）；db2 = sum(dz2)；da1 = dz2@W2.T 将梯度反向传播到隐藏层；dz1 = da1 * (z1>0)（ReLU 导数——z1>0 时为 1，否则为 0）；dW1 = X.T@dz1；db1 = sum(dz1)；(4) 参数更新 +=。常见错误：(1) MSE 导数缺少系数 2；(2) ReLU 导数写为 da1*(z1>0)*z1（多了 z1 乘子，混淆了 ReLU 函数值与其导数）；(3) dW2 维度错误 dz2@a1.T；(4) da1 = W2.T@dz2 矩阵乘法顺序错误。"
+  }
+];
+
+  // ============================================================
+  // DataStore
+  // ============================================================
+  const DataStore = {
+    questions: [],
+    filtered: [],
+    quizSet: [],
+    currentIndex: 0,
+    answers: [],
+    score: 0,
+    settings: { difficulty: 'all', topics: ['基础概念', '经典算法', '神经网络基础'], questionCount: 20 },
+    puzzleState: null,
+    submitted: false,
+    resetQuiz() {
+      this.currentIndex = 0;
+      this.answers = [];
+      this.score = 0;
+      this.puzzleState = null;
+      this.submitted = false;
+    }
+  };
+
+  // ============================================================
+  // QuestionBank
+  // ============================================================
+  const QuestionBank = {
+    loadDefaults() {
+      DataStore.questions = DEFAULT_QUESTIONS.map(function(q) { return Object.assign({}, q); });
+      return DataStore.questions.length;
+    },
+    importFromJSON(json) {
+      if (!json || !Array.isArray(json.questions)) {
+        return { success: false, error: 'JSON 格式错误：缺少 questions 数组。', count: 0 };
+      }
+      var added = 0;
+      var errors = [];
+      var self = this;
+      json.questions.forEach(function(q, i) {
+        var err = self.validateQuestion(q);
+        if (err) { errors.push('第 ' + (i + 1) + ' 题：' + err); }
+        else { DataStore.questions.push(Object.assign({}, q)); added++; }
+      });
+      return { success: errors.length === 0, errors: errors, count: added };
+    },
+    validateQuestion(q) {
+      if (!q || typeof q !== 'object') return '题目数据格式错误';
+      if (!q.id || !q.type || !q.difficulty || !q.topic || !q.question || !q.explanation) {
+        return '缺少必填字段（id, type, difficulty, topic, question, explanation）';
+      }
+      if (['easy', 'medium', 'hard'].indexOf(q.difficulty) === -1) return '难度值无效：' + q.difficulty;
+      if (['基础概念', '经典算法', '神经网络基础'].indexOf(q.topic) === -1) return '知识点无效：' + q.topic;
+      if (q.type === 'concept') {
+        if (!Array.isArray(q.options) || q.options.length !== 4) return '概念题必须有恰好 4 个选项';
+        if (typeof q.correct !== 'number' || q.correct < 0 || q.correct > 3) return 'correct 必须是 0-3';
+      } else if (q.type === 'codepuzzle') {
+        if (!Array.isArray(q.correct_blocks) || q.correct_blocks.length === 0) return 'correct_blocks 必须是非空数组';
+        if (!Array.isArray(q.distractor_blocks)) return 'distractor_blocks 必须是数组';
+      } else {
+        return '未知题目类型：' + q.type;
+      }
+      return null;
+    },
+    filter(difficulty, topics) {
+      var pool = DataStore.questions.slice();
+      if (difficulty && difficulty !== 'all') {
+        pool = pool.filter(function(q) { return q.difficulty === difficulty; });
+      }
+      if (topics && topics.length > 0) {
+        pool = pool.filter(function(q) { return topics.indexOf(q.topic) !== -1; });
+      }
+      DataStore.filtered = pool;
+      return pool;
+    },
+    selectRandom(n, pool) {
+      var source = pool || DataStore.filtered;
+      var shuffled = shuffleArray(source);
+      if (n === 'all' || n >= source.length) return shuffled;
+      return shuffled.slice(0, n);
+    }
+  };
+
+  // ============================================================
+  // UIRenderer
+  // ============================================================
+  var UIRenderer = {
+    showScreen: function(name) {
+      var screens = document.querySelectorAll('.screen');
+      for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+      var target = document.getElementById('screen-' + name);
+      if (target) target.classList.add('active');
+    },
+    updateAvailableCount: function() {
+      var el = document.getElementById('available-info');
+      if (el) el.textContent = '（可用题库：' + DataStore.questions.length + ' 道）';
+    },
+    updateFilterWarn: function() {
+      var filtered = QuestionBank.filter(DataStore.settings.difficulty, DataStore.settings.topics);
+      var warn = document.getElementById('filter-warn');
+      var btn = document.getElementById('btn-start');
+      if (filtered.length === 0) { warn.classList.add('show'); btn.disabled = true; }
+      else { warn.classList.remove('show'); btn.disabled = false; }
+    },
+    renderQuiz: function(question) {
+      DataStore.puzzleState = null;
+      DataStore.submitted = false;
+      var fb = document.getElementById('feedback-area');
+      fb.classList.remove('show', 'correct', 'wrong');
+      document.getElementById('btn-submit').disabled = true;
+      document.getElementById('btn-submit').style.display = '';
+      document.getElementById('btn-skip').style.display = '';
+      document.getElementById('btn-next').style.display = 'none';
+      this.updateProgress();
+      this._renderQuestionMeta(question);
+      this._renderQuestionText(question);
+      if (question.type === 'concept') this.renderConcept(question);
+      else if (question.type === 'codepuzzle') this.renderCodePuzzle(question);
+    },
+    _renderQuestionMeta: function(q) {
+      var labels = { easy: '🟢 简单', medium: '🟡 中等', hard: '🔴 困难' };
+      document.getElementById('question-meta').innerHTML =
+        '<span class="badge badge-qnum">第 ' + (DataStore.currentIndex + 1) + '/' + DataStore.quizSet.length + ' 题</span>' +
+        '<span class="badge badge-difficulty">' + (labels[q.difficulty] || q.difficulty) + '</span>' +
+        '<span class="badge badge-topic">' + escapeHTML(q.topic) + '</span>';
+    },
+    _renderQuestionText: function(q) {
+      document.getElementById('question-text').textContent = q.question;
+      var ctx = document.getElementById('question-context');
+      if (q.context) { ctx.textContent = q.context; ctx.style.display = 'block'; }
+      else { ctx.style.display = 'none'; }
+    },
+    renderConcept: function(q) {
+      var container = document.getElementById('question-content');
+      var html = '<div class="options-list">';
+      q.options.forEach(function(opt, i) {
+        html += '<div class="option-card" data-option-index="' + i + '">' + escapeHTML(opt) + '</div>';
+      });
+      html += '</div>';
+      container.innerHTML = html;
+      var self = this;
+      container.querySelectorAll('.option-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          if (DataStore.submitted) return;
+          container.querySelectorAll('.option-card').forEach(function(c) { c.classList.remove('selected'); });
+          card.classList.add('selected');
+          document.getElementById('btn-submit').disabled = false;
+        });
+      });
+    },
+    renderCodePuzzle: function(q) {
+      var allBlocks = q.correct_blocks.concat(q.distractor_blocks);
+      var shuffled = shuffleArray(allBlocks);
+      DataStore.puzzleState = {
+        poolBlocks: shuffled.map(function(text) { return { text: text, used: false }; }),
+        selectedBlocks: [],
+        correctBlocks: q.correct_blocks
+      };
+      this._renderPuzzleDOM();
+    },
+    _renderPuzzleDOM: function() {
+      var state = DataStore.puzzleState;
+      var container = document.getElementById('question-content');
+      var html = '<p class="puzzle-label">📦 代码块池（点击选择）</p>';
+      html += '<div class="block-pool" id="block-pool">';
+      var hasAvailable = false;
+      state.poolBlocks.forEach(function(block, i) {
+        if (!block.used) {
+          hasAvailable = true;
+          html += '<div class="code-block pool-block" data-pool-index="' + i + '"><pre><code>' + escapeHTML(block.text) + '</code></pre></div>';
+        }
+      });
+      html += '</div>';
+      html += '<p class="puzzle-label">✅ 你的答案（点击退回）</p>';
+      html += '<div class="block-answer" id="block-answer">';
+      state.selectedBlocks.forEach(function(block, i) {
+        html += '<div class="code-block answer-block" data-answer-index="' + i + '" data-order="' + (i + 1) + '"><pre><code>' + escapeHTML(block.text) + '</code></pre></div>';
+      });
+      html += '</div>';
+      html += '<p class="hint-text">💡 按正确顺序点击代码块，构建完整代码。点击答案区的块可退回。</p>';
+      container.innerHTML = html;
+      this._bindPuzzleEvents();
+      document.getElementById('btn-submit').disabled = (state.selectedBlocks.length === 0);
+    },
+    renderPuzzleAreas: function() { this._renderPuzzleDOM(); },
+    _bindPuzzleEvents: function() {
+      var self = this;
+      var state = DataStore.puzzleState;
+      if (!state) return;
+      document.querySelectorAll('.pool-block').forEach(function(block) {
+        block.addEventListener('click', function() {
+          if (DataStore.submitted) return;
+          var idx = parseInt(this.dataset.poolIndex);
+          var bd = state.poolBlocks[idx];
+          if (bd.used) return;
+          bd.used = true;
+          state.selectedBlocks.push({ text: bd.text, poolIndex: idx });
+          self.renderPuzzleAreas();
+        });
+      });
+      document.querySelectorAll('.answer-block').forEach(function(block) {
+        block.addEventListener('click', function() {
+          if (DataStore.submitted) return;
+          var idx = parseInt(this.dataset.answerIndex);
+          var removed = state.selectedBlocks.splice(idx, 1)[0];
+          state.poolBlocks[removed.poolIndex].used = false;
+          self.renderPuzzleAreas();
+        });
+      });
+    },
+    showFeedback: function(result) {
+      var fb = document.getElementById('feedback-area');
+      var icon = fb.querySelector('.feedback-icon');
+      var msg = document.getElementById('feedback-msg');
+      var expl = document.getElementById('explanation-text');
+      fb.classList.add('show');
+      if (result.correct) {
+        fb.classList.add('correct'); fb.classList.remove('wrong');
+        icon.textContent = '✅';
+        msg.textContent = '回答正确！得分：' + (result.score >= 1 ? '1 分' : result.score.toFixed(2) + ' 分');
+      } else {
+        fb.classList.add('wrong'); fb.classList.remove('correct');
+        icon.textContent = result.score > 0 ? '⚠️' : '❌';
+        msg.textContent = result.score > 0
+          ? '部分正确（' + (result.score * 100).toFixed(0) + '%），继续加油！'
+          : '回答错误，看看正确答案吧。';
+      }
+      expl.textContent = '💡 ' + result.explanation;
+      document.getElementById('btn-submit').style.display = 'none';
+      document.getElementById('btn-skip').style.display = 'none';
+      document.getElementById('btn-next').style.display = '';
+    },
+    updateProgress: function() {
+      var total = DataStore.quizSet.length;
+      var current = DataStore.currentIndex;
+      document.getElementById('progress-bar').style.width = (total > 0 ? (current / total * 100) : 0) + '%';
+      document.getElementById('progress-text').textContent = '第 ' + (current + 1) + '/' + total + ' 题';
+      document.getElementById('score-display').textContent = '得分：' + DataStore.score.toFixed(1);
+    },
+    renderResults: function(results) {
+      document.getElementById('result-score').textContent = results.score.toFixed(1);
+      document.getElementById('result-total').textContent = '/' + results.total;
+      document.getElementById('result-percent').textContent = results.percent.toFixed(0) + '%';
+      var gradeEl = document.getElementById('result-grade');
+      gradeEl.textContent = results.grade;
+      gradeEl.className = 'grade grade-' + results.grade.toLowerCase();
+      var icon = document.getElementById('result-icon');
+      if (results.percent >= 90) icon.textContent = '🏆';
+      else if (results.percent >= 80) icon.textContent = '🎉';
+      else if (results.percent >= 60) icon.textContent = '👍';
+      else icon.textContent = '📚';
+
+      var diffDiv = document.getElementById('breakdown-difficulty');
+      diffDiv.innerHTML = '<h3>📊 按难度</h3>';
+      var diffLabels = { easy: '🟢 简单', medium: '🟡 中等', hard: '🔴 困难' };
+      Object.keys(diffLabels).forEach(function(key) {
+        var d = results.byDifficulty[key] || { correct: 0, total: 0 };
+        var pct = d.total > 0 ? (d.correct / d.total * 100).toFixed(0) : '-';
+        diffDiv.innerHTML += '<div class="breakdown-row"><span>' + diffLabels[key] + '</span><span class="b-score">' + d.correct.toFixed(1) + '/' + d.total + (pct !== '-' ? ' (' + pct + '%)' : '') + '</span></div>';
+      });
+
+      var topicDiv = document.getElementById('breakdown-topic');
+      topicDiv.innerHTML = '<h3>📚 按知识点</h3>';
+      ['基础概念', '经典算法', '神经网络基础'].forEach(function(key) {
+        var d = results.byTopic[key] || { correct: 0, total: 0 };
+        var pct = d.total > 0 ? (d.correct / d.total * 100).toFixed(0) : '-';
+        topicDiv.innerHTML += '<div class="breakdown-row"><span>' + key + '</span><span class="b-score">' + d.correct.toFixed(1) + '/' + d.total + (pct !== '-' ? ' (' + pct + '%)' : '') + '</span></div>';
+      });
+
+      var reviewList = document.getElementById('review-list');
+      var wrongAnswers = results.answers.filter(function(a) { return a.score < 1; });
+      if (wrongAnswers.length === 0) {
+        reviewList.innerHTML = '<p style="color:var(--color-correct);text-align:center;padding:16px;">🎉 全部正确！太棒了！</p>';
+      } else {
+        reviewList.innerHTML = wrongAnswers.map(function(a, i) {
+          var userAnsHTML = '';
+          if (a.question.type === 'concept') {
+            userAnsHTML = escapeHTML(a.question.options[a.userAnswer] || '未作答');
+          } else {
+            userAnsHTML = (a.userAnswer || []).map(function(b) { return '<code style="font-size:12px;">' + escapeHTML(b.text || b) + '</code>'; }).join(' → ') || '未作答';
+          }
+          var correctAnsHTML = '';
+          if (a.question.type === 'concept') {
+            correctAnsHTML = escapeHTML(a.question.options[a.question.correct]);
+          } else {
+            correctAnsHTML = a.question.correct_blocks.map(function(b) { return '<code style="font-size:12px;">' + escapeHTML(b) + '</code>'; }).join(' → ');
+          }
+          return '<div class="review-item"><div class="review-item-header"><span>Q' + (DataStore.quizSet.indexOf(a.question) + 1) + ': ' + escapeHTML(a.question.question.substring(0, 40)) + '...</span><span class="review-icon">▼</span></div><div class="review-item-body"><p class="rv-label">你的答案：</p><p class="rv-wrong">' + userAnsHTML + '</p><p class="rv-label">正确答案：</p><p class="rv-correct">' + correctAnsHTML + '</p><p class="rv-label">解析：</p><p>' + escapeHTML(a.question.explanation) + '</p></div></div>';
+        }).join('');
+        reviewList.querySelectorAll('.review-item-header').forEach(function(header) {
+          header.addEventListener('click', function() { this.parentElement.classList.toggle('open'); });
+        });
+      }
+    }
+  };
+
+  // ============================================================
+  // QuizEngine
+  // ============================================================
+  var QuizEngine = {
+    startQuiz: function() {
+      var settings = DataStore.settings;
+      var filtered = QuestionBank.filter(settings.difficulty, settings.topics);
+      if (filtered.length === 0) { alert('当前筛选条件下没有题目，请调整筛选。'); return; }
+
+      // 边界处理：题量超过可用题数时自动调整
+      var count = settings.questionCount;
+      var actualCount;
+      if (count === 'all') {
+        actualCount = filtered.length;
+      } else {
+        actualCount = Math.min(count, filtered.length);
+      }
+      if (count !== 'all' && count > filtered.length) {
+        alert('可用题目仅 ' + filtered.length + ' 道，已将题目数量自动调整为 ' + actualCount + ' 道。');
+      }
+
+      DataStore.resetQuiz();
+      DataStore.quizSet = QuestionBank.selectRandom(actualCount, filtered);
+      UIRenderer.showScreen('quiz');
+      UIRenderer.renderQuiz(DataStore.quizSet[0]);
+    },
+    getCurrentQuestion: function() { return DataStore.quizSet[DataStore.currentIndex]; },
+    submitAnswer: function() {
+      if (DataStore.submitted) return;
+      DataStore.submitted = true;
+      var q = this.getCurrentQuestion();
+      var result;
+      if (q.type === 'concept') {
+        var selected = document.querySelector('.option-card.selected');
+        var userAnswer = selected ? parseInt(selected.dataset.optionIndex) : -1;
+        result = this._checkConcept(q, userAnswer);
+        result.userAnswer = userAnswer;
+        this._highlightConceptAnswer(q, userAnswer);
+      } else if (q.type === 'codepuzzle') {
+        var state = DataStore.puzzleState;
+        var userBlocks = state ? state.selectedBlocks : [];
+        result = this._checkPuzzle(q, userBlocks);
+        result.userAnswer = userBlocks;
+        this._highlightPuzzleAnswer(q, state);
+      }
+      DataStore.answers.push({ id: q.id, question: q, userAnswer: result.userAnswer, correct: result.correct, score: result.score });
+      DataStore.score += result.score;
+      UIRenderer.updateProgress();
+      UIRenderer.showFeedback(result);
+    },
+    _checkConcept: function(q, userAnswer) {
+      var correct = (userAnswer === q.correct);
+      return { correct: correct, score: correct ? 1 : 0, explanation: q.explanation };
+    },
+    _checkPuzzle: function(q, userBlocks) {
+      var correctBlocks = q.correct_blocks;
+      var userTexts = userBlocks.map(function(b) { return b.text || b; });
+      var matched = 0;
+      for (var i = 0; i < Math.min(userTexts.length, correctBlocks.length); i++) {
+        if (userTexts[i] === correctBlocks[i]) matched++;
+      }
+      var score = correctBlocks.length > 0 ? matched / correctBlocks.length : 0;
+      return { correct: score >= 1, score: score, explanation: q.explanation };
+    },
+    _highlightConceptAnswer: function(q, userAnswer) {
+      var cards = document.querySelectorAll('.option-card');
+      cards.forEach(function(c) { c.classList.add('disabled'); });
+      cards[q.correct].classList.add('correct');
+      if (userAnswer >= 0 && userAnswer !== q.correct) cards[userAnswer].classList.add('wrong');
+    },
+    _highlightPuzzleAnswer: function(q, state) {
+      var correctBlocks = q.correct_blocks;
+      document.querySelectorAll('.answer-block').forEach(function(block, i) {
+        var userText = state.selectedBlocks[i] ? state.selectedBlocks[i].text : '';
+        if (i < correctBlocks.length && userText === correctBlocks[i]) block.classList.add('correct-block');
+        else block.classList.add('wrong-block');
+      });
+      document.querySelectorAll('.pool-block, .answer-block').forEach(function(b) { b.style.pointerEvents = 'none'; });
+    },
+    nextQuestion: function() {
+      DataStore.currentIndex++;
+      if (DataStore.currentIndex >= DataStore.quizSet.length) this._finishQuiz();
+      else UIRenderer.renderQuiz(DataStore.quizSet[DataStore.currentIndex]);
+    },
+    skipQuestion: function() {
+      var q = this.getCurrentQuestion();
+      DataStore.answers.push({ id: q.id, question: q, userAnswer: (q.type === 'concept') ? -1 : [], correct: false, score: 0 });
+      DataStore.currentIndex++;
+      if (DataStore.currentIndex >= DataStore.quizSet.length) this._finishQuiz();
+      else UIRenderer.renderQuiz(DataStore.quizSet[DataStore.currentIndex]);
+    },
+    _finishQuiz: function() {
+      var results = this.calculateResults();
+      UIRenderer.showScreen('results');
+      UIRenderer.renderResults(results);
+    },
+    calculateResults: function() {
+      var answers = DataStore.answers;
+      var total = answers.length;
+      var scoreSum = 0;
+      var byDifficulty = {};
+      var byTopic = {};
+      answers.forEach(function(a) {
+        scoreSum += a.score;
+        var diff = a.question.difficulty;
+        var topic = a.question.topic;
+        if (!byDifficulty[diff]) byDifficulty[diff] = { correct: 0, total: 0 };
+        byDifficulty[diff].correct += a.score;
+        byDifficulty[diff].total += 1;
+        if (!byTopic[topic]) byTopic[topic] = { correct: 0, total: 0 };
+        byTopic[topic].correct += a.score;
+        byTopic[topic].total += 1;
+      });
+      var percent = total > 0 ? (scoreSum / total * 100) : 0;
+      var grade = 'F';
+      if (percent >= 90) grade = 'A'; else if (percent >= 80) grade = 'B'; else if (percent >= 70) grade = 'C'; else if (percent >= 60) grade = 'D';
+      return { score: scoreSum, total: total, percent: percent, grade: grade, byDifficulty: byDifficulty, byTopic: byTopic, answers: answers };
+    }
+  };
+
+  // ============================================================
+  // EventHandler
+  // ============================================================
+  var EventHandler = {
+    init: function() {
+      var self = this;
+      // 难度筛选
+      document.querySelectorAll('#difficulty-pills .pill').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+          document.querySelectorAll('#difficulty-pills .pill').forEach(function(p) { p.classList.remove('active'); });
+          pill.classList.add('active');
+          DataStore.settings.difficulty = pill.dataset.value;
+          UIRenderer.updateFilterWarn();
+        });
+      });
+      // 知识点筛选
+      document.querySelectorAll('#topic-pills .pill').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+          pill.classList.toggle('active');
+          var active = document.querySelectorAll('#topic-pills .pill.active');
+          DataStore.settings.topics = Array.from(active).map(function(p) { return p.dataset.value; });
+          UIRenderer.updateFilterWarn();
+        });
+      });
+      // 题目数量
+      var countSelect = document.getElementById('question-count');
+      if (countSelect) {
+        countSelect.addEventListener('change', function() {
+          DataStore.settings.questionCount = countSelect.value === 'all' ? 'all' : parseInt(countSelect.value);
+        });
+      }
+      // 开始
+      document.getElementById('btn-start').addEventListener('click', function() { QuizEngine.startQuiz(); });
+      // 导入
+      document.getElementById('btn-import').addEventListener('click', function() { document.getElementById('import-file').click(); });
+      document.getElementById('import-file').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+          try {
+            var json = JSON.parse(ev.target.result);
+            var result = QuestionBank.importFromJSON(json);
+            var status = document.getElementById('import-status');
+            if (result.errors && result.errors.length > 0) {
+              status.textContent = '已导入 ' + result.count + ' 道，' + result.errors.length + ' 道格式错误（详见 Console）';
+              console.warn('题目导入错误:', result.errors);
+            } else { status.textContent = '✅ 成功导入 ' + result.count + ' 道题目'; }
+            UIRenderer.updateAvailableCount();
+            UIRenderer.updateFilterWarn();
+          } catch (err) { document.getElementById('import-status').textContent = '❌ JSON 解析失败：' + err.message; }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+      });
+      // 提交
+      document.getElementById('btn-submit').addEventListener('click', function() { QuizEngine.submitAnswer(); });
+      // 下一题
+      document.getElementById('btn-next').addEventListener('click', function() { QuizEngine.nextQuestion(); });
+      // 跳过
+      document.getElementById('btn-skip').addEventListener('click', function() { QuizEngine.skipQuestion(); });
+      // 再来一次
+      document.getElementById('btn-play-again').addEventListener('click', function() { QuizEngine.startQuiz(); });
+      // 返回首页
+      document.getElementById('btn-home').addEventListener('click', function() {
+        UIRenderer.showScreen('home');
+        UIRenderer.updateAvailableCount();
+        UIRenderer.updateFilterWarn();
+      });
+      // 键盘快捷键
+      document.addEventListener('keydown', function(e) {
+        if (['1','2','3','4'].indexOf(e.key) !== -1 && !DataStore.submitted) {
+          var q = DataStore.quizSet[DataStore.currentIndex];
+          if (q && q.type === 'concept') {
+            var cards = document.querySelectorAll('.option-card');
+            var idx = parseInt(e.key) - 1;
+            if (cards[idx]) {
+              cards.forEach(function(c) { c.classList.remove('selected'); });
+              cards[idx].classList.add('selected');
+              document.getElementById('btn-submit').disabled = false;
+            }
+          }
+        }
+        if (e.key === 'Enter') {
+          if (DataStore.submitted) { QuizEngine.nextQuestion(); }
+          else if (!document.getElementById('btn-submit').disabled) { QuizEngine.submitAnswer(); }
+        }
+      });
+      console.log('✅ ML Quiz 初始化完成！题库：' + DataStore.questions.length + ' 道');
+    }
+  };
+
+  // ============================================================
+  // 启动
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', function() {
+    QuestionBank.loadDefaults();
+    UIRenderer.updateAvailableCount();
+    EventHandler.init();
+  });
+
+  window.MLQuiz = { DataStore: DataStore, QuestionBank: QuestionBank, UIRenderer: UIRenderer, QuizEngine: QuizEngine, EventHandler: EventHandler };
+})();
+</script>
+</body>
+</html>
