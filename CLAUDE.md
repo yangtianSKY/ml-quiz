@@ -25,7 +25,7 @@
 ### 代码文件
 | 文件 | 说明 |
 |------|------|
-| [ml-quiz.html](ml-quiz.html) | 完整应用（HTML + CSS + JS） |
+| [index.html](index.html) | 完整应用（HTML + CSS + JS） |
 
 ### 用户文档
 | 文件 | 说明 |
